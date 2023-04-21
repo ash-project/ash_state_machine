@@ -4,7 +4,26 @@ defmodule AshFsm.Transformers.FillInEventDefaults do
   @moduledoc false
 
   def transform(dsl_state) do
-    initial_states = List.wrap(AshFsm.Info.fsm_initial_states!(dsl_state))
+    initial_states =
+      case AshFsm.Info.fsm_initial_states(dsl_state) do
+        {:ok, value} -> List.wrap(value)
+        _ -> []
+      end
+
+    initial_states =
+      case initial_states do
+        [] ->
+          case AshFsm.Info.fsm_default_initial_state(dsl_state) do
+            {:ok, value} when not is_nil(value) ->
+              [value]
+
+            _ ->
+              initial_states
+          end
+
+        _ ->
+          initial_states
+      end
 
     events =
       dsl_state
@@ -15,8 +34,8 @@ defmodule AshFsm.Transformers.FillInEventDefaults do
       |> Enum.flat_map(fn event ->
         List.wrap(event.from) ++ List.wrap(event.to)
       end)
-      |> Enum.uniq()
       |> Enum.concat(List.wrap(initial_states))
+      |> Enum.uniq()
 
     dsl_state =
       case AshFsm.Info.fsm_initial_states(dsl_state) do
@@ -27,14 +46,15 @@ defmodule AshFsm.Transformers.FillInEventDefaults do
           Transformer.set_option(dsl_state, [:fsm], :initial_states, all_states)
       end
 
-    events
-    |> Enum.reduce(dsl_state, fn event, dsl_state ->
-      Transformer.replace_entity(dsl_state, [:fsm], %{
-        event
-        | from: event.from || all_states,
-          to: event.to || all_states
-      })
-    end)
-    |> Transformer.persist(:all_fsm_states, all_states)
+    {:ok,
+     events
+     |> Enum.reduce(dsl_state, fn event, dsl_state ->
+       Transformer.replace_entity(dsl_state, [:fsm], %{
+         event
+         | from: event.from || all_states,
+           to: event.to || all_states
+       })
+     end)
+     |> Transformer.persist(:all_fsm_states, all_states)}
   end
 end
