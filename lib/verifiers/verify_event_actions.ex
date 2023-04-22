@@ -4,6 +4,9 @@ defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
   def verify(dsl_state) do
     dsl_state
     |> AshStateMachine.Info.state_machine_transitions()
+    |> Enum.reject(fn transition ->
+      transition.action == :*
+    end)
     |> Enum.each(fn transition ->
       action = Ash.Resource.Info.action(dsl_state, transition.action)
 
