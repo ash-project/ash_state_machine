@@ -136,7 +136,7 @@ defmodule AshFsm.MixProject do
   defp deps do
     [
       {:ash, "~> 2.7"},
-      {:spark, path: "../spark", override: true}
+      {:spark, ">= 1.0.9"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
