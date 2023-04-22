@@ -30,12 +30,22 @@ defmodule AshStateMachine.Transformers.AddState do
 
         Ash.Resource.Builder.add_attribute(dsl_state, attribute_name, :atom,
           default: default,
+          allow_nil?: false,
           constraints: [
             one_of: all_states
           ]
         )
 
       attribute ->
+        if attribute.allow_nil? do
+          raise Spark.Error.DslError,
+            module: module,
+            path: [:attributes, attribute.name],
+            message: """
+            Expected the attribute #{attribute.name} not to be `allow_nil? true`. This is required for `AshStateMachine`
+            """
+        end
+
         {type, constraints} =
           if Ash.Type.NewType.new_type?(attribute.type) do
             {Ash.Type.NewType.subtype_of(attribute.type),
