@@ -76,4 +76,16 @@ defmodule AshStateMachineTest do
       assert ThreeStates.complete!(state_machine).state == :complete
     end
   end
+
+  describe "charts" do
+    test "it generates the appropriate chart" do
+      assert AshStateMachine.Charts.mermaid_flowchart(ThreeStates) ==
+               """
+               flowchart TD
+               pending --> |begin| executing
+               executing --> |complete| complete
+               """
+               |> String.trim_trailing()
+    end
+  end
 end
