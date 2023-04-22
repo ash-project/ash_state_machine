@@ -24,7 +24,8 @@ defmodule AshStateMachine do
     schema: [
       action: [
         type: :atom,
-        doc: "The corresponding action that is invoked for the transition."
+        doc:
+          "The corresponding action that is invoked for the transition. Use `:*` to allow any update action to perform this transition."
       ],
       from: [
         type: {:or, [{:list, :atom}, :atom]},
