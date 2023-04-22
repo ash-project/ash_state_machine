@@ -20,7 +20,6 @@ defmodule AshStateMachine do
     name: :transition,
     target: Transition,
     args: [:action],
-    identifier: :action,
     schema: [
       action: [
         type: :atom,
