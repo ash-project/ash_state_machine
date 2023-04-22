@@ -1,4 +1,4 @@
-defmodule AshFsm.Transformers.AddState do
+defmodule AshStateMachine.Transformers.AddState do
   use Spark.Dsl.Transformer
   alias Spark.Dsl.Transformer
 
@@ -6,19 +6,21 @@ defmodule AshFsm.Transformers.AddState do
 
   def transform(dsl_state) do
     deprecated_states =
-      case AshFsm.Info.fsm_deprecated_states(dsl_state) do
+      case AshStateMachine.Info.state_machine_deprecated_states(dsl_state) do
         {:ok, value} -> value || []
         _ -> []
       end
 
-    all_states = Enum.uniq(AshFsm.Info.fsm_all_states(dsl_state) ++ deprecated_states)
-    attribute_name = AshFsm.Info.fsm_state_attribute!(dsl_state)
+    all_states =
+      Enum.uniq(AshStateMachine.Info.state_machine_all_states(dsl_state) ++ deprecated_states)
+
+    attribute_name = AshStateMachine.Info.state_machine_state_attribute!(dsl_state)
     module = Transformer.get_persisted(dsl_state, :module)
 
     case Ash.Resource.Info.attribute(dsl_state, attribute_name) do
       nil ->
         default =
-          case AshFsm.Info.fsm_default_initial_state(dsl_state) do
+          case AshStateMachine.Info.state_machine_default_initial_state(dsl_state) do
             {:ok, value} ->
               value
 
@@ -42,7 +44,7 @@ defmodule AshFsm.Transformers.AddState do
             {attribute.type, attribute.constraints}
           end
 
-        case AshFsm.Info.fsm_default_initial_state(dsl_state) do
+        case AshStateMachine.Info.state_machine_default_initial_state(dsl_state) do
           {:ok, default} ->
             if attribute.default != default do
               raise Spark.Error.DslError,

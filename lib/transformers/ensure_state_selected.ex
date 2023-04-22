@@ -1,4 +1,4 @@
-defmodule AshFsm.Transformers.EnsureStateSelected do
+defmodule AshStateMachine.Transformers.EnsureStateSelected do
   use Spark.Dsl.Transformer
 
   def transform(dsl_state) do
@@ -6,7 +6,7 @@ defmodule AshFsm.Transformers.EnsureStateSelected do
       dsl_state,
       {Ash.Resource.Preparation.Build,
        ensure_selected: [
-         AshFsm.Info.fsm_state_attribute(dsl_state)
+         AshStateMachine.Info.state_machine_state_attribute(dsl_state)
        ]}
     )
   end

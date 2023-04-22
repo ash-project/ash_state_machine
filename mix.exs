@@ -1,4 +1,4 @@
-defmodule AshFsm.MixProject do
+defmodule AshStateMachine.MixProject do
   use Mix.Project
 
   @version "0.1.0"
@@ -9,7 +9,7 @@ defmodule AshFsm.MixProject do
 
   def project do
     [
-      app: :ash_fsm,
+      app: :ash_state_machine,
       version: @version,
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -20,19 +20,19 @@ defmodule AshFsm.MixProject do
       dialyzer: [plt_add_apps: [:ash]],
       docs: docs(),
       description: @description,
-      source_url: "https://github.com/ash-project/ash_fsm",
-      homepage_url: "https://github.com/ash-project/ash_fsm"
+      source_url: "https://github.com/ash-project/ash_state_machine",
+      homepage_url: "https://github.com/ash-project/ash_state_machine"
     ]
   end
 
   defp package do
     [
-      name: :ash_fsm,
+      name: :ash_state_machine,
       licenses: ["MIT"],
       files: ~w(lib .formatter.exs mix.exs README* LICENSE*
       CHANGELOG* documentation),
       links: %{
-        GitHub: "https://github.com/ash-project/ash_fsm"
+        GitHub: "https://github.com/ash-project/ash_state_machine"
       }
     ]
   end
@@ -87,17 +87,17 @@ defmodule AshFsm.MixProject do
 
   defp docs do
     [
-      main: "AshFsm",
+      main: "AshStateMachine",
       source_ref: "v#{@version}",
       logo: "logos/small-logo.png",
       extra_section: "GUIDES",
       spark: [
         extensions: [
           %{
-            module: AshFsm,
-            name: "AshFsm",
+            module: AshStateMachine,
+            name: "AshStateMachine",
             target: "Ash.Resource",
-            type: "Fsm Resource"
+            type: "StateMachine Resource"
           },
           %{
             module: AshGraphql.Api,
@@ -147,7 +147,7 @@ defmodule AshFsm.MixProject do
       sobelow: "sobelow --skip",
       credo: "credo --strict",
       docs: ["docs", "ash.replace_doc_links"],
-      "spark.formatter": "spark.formatter --extensions AshFsm"
+      "spark.formatter": "spark.formatter --extensions AshStateMachine"
     ]
   end
 end

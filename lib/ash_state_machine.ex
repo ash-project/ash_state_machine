@@ -1,11 +1,11 @@
-defmodule AshFsm do
+defmodule AshStateMachine do
   @moduledoc """
-  Documentation for `AshFsm`.
+  Documentation for `AshStateMachine`.
   """
 
-  defmodule Event do
+  defmodule Transition do
     @moduledoc """
-    The configuration for an event.
+    The configuration for an transition.
     """
     @type t :: %__MODULE__{
             action: atom,
@@ -16,15 +16,15 @@ defmodule AshFsm do
     defstruct [:action, :from, :to]
   end
 
-  @event %Spark.Dsl.Entity{
-    name: :event,
-    target: Event,
+  @transition %Spark.Dsl.Entity{
+    name: :transition,
+    target: Transition,
     args: [:action],
     identifier: :action,
     schema: [
       action: [
         type: :atom,
-        doc: "The corresponding action that is invoked for the event."
+        doc: "The corresponding action that is invoked for the transition."
       ],
       from: [
         type: {:or, [{:list, :atom}, :atom]},
@@ -39,23 +39,23 @@ defmodule AshFsm do
     ]
   }
 
-  @events %Spark.Dsl.Section{
-    name: :events,
+  @transitions %Spark.Dsl.Section{
+    name: :transitions,
     entities: [
-      @event
+      @transition
     ]
   }
 
-  @fsm %Spark.Dsl.Section{
-    name: :fsm,
+  @state_machine %Spark.Dsl.Section{
+    name: :state_machine,
     schema: [
       deprecated_states: [
         type: {:list, :atom},
         doc: """
         A list of states that have been deprecated.
-        The list of states is derived from the events normally.
+        The list of states is derived from the transitions normally.
         Use this option to express that certain types should still
-        be included even though no events go to/from that state anymore.
+        be included even though no transitions go to/from that state anymore.
         """
       ],
       state_attribute: [
@@ -74,44 +74,46 @@ defmodule AshFsm do
       ]
     ],
     sections: [
-      @events
+      @transitions
     ]
   }
 
   use Spark.Dsl.Extension,
-    sections: [@fsm],
+    sections: [@state_machine],
     transformers: [
-      AshFsm.Transformers.FillInEventDefaults,
-      AshFsm.Transformers.AddState,
-      AshFsm.Transformers.EnsureStateSelected
+      AshStateMachine.Transformers.FillInTransitionDefaults,
+      AshStateMachine.Transformers.AddState,
+      AshStateMachine.Transformers.EnsureStateSelected
     ],
     verifiers: [
-      AshFsm.Verifiers.VerifyEventActions,
-      AshFsm.Verifiers.VerifyDefaultInitialState
+      AshStateMachine.Verifiers.VerifyTransitionActions,
+      AshStateMachine.Verifiers.VerifyDefaultInitialState
     ],
     imports: [
-      AshFsm.BuiltinChanges
+      AshStateMachine.BuiltinChanges
     ]
 
   def transition_state(%{action_type: :update} = changeset, target) do
-    events = AshFsm.Info.fsm_events(changeset.resource, changeset.action.name)
-    attribute = AshFsm.Info.fsm_state_attribute!(changeset.resource)
+    transitions =
+      AshStateMachine.Info.state_machine_transitions(changeset.resource, changeset.action.name)
+
+    attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
     old_state = Map.get(changeset.data, attribute)
 
-    case Enum.find(events, fn event ->
-           old_state in List.wrap(event.from) and target in List.wrap(event.to)
+    case Enum.find(transitions, fn transition ->
+           old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
          end) do
       nil ->
         Ash.Changeset.add_error(
           changeset,
-          AshFsm.Errors.NoMatchingEvent.exception(
+          AshStateMachine.Errors.NoMatchingTransition.exception(
             from: old_state,
             target: target,
             action: changeset.action.name
           )
         )
 
-      _event ->
+      _transition ->
         Ash.Changeset.force_change_attribute(changeset, attribute, target)
     end
   end

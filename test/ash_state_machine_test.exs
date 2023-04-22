@@ -1,18 +1,18 @@
-defmodule AshFsmTest do
+defmodule AshStateMachineTest do
   use ExUnit.Case
-  doctest AshFsm
+  doctest AshStateMachine
 
   defmodule ThreeStates do
     use Ash.Resource,
       data_layer: Ash.DataLayer.Ets,
-      extensions: [AshFsm]
+      extensions: [AshStateMachine]
 
-    fsm do
+    state_machine do
       default_initial_state :pending
 
-      events do
-        event :begin, from: :pending, to: :executing
-        event :complete, from: :executing, to: :complete
+      transitions do
+        transition(:begin, from: :pending, to: :executing)
+        transition(:complete, from: :executing, to: :complete)
       end
     end
 
@@ -37,7 +37,7 @@ defmodule AshFsmTest do
     end
 
     code_interface do
-      define_for AshFsmTest.Api
+      define_for AshStateMachineTest.Api
       define :create
       define :begin
       define :complete
@@ -54,7 +54,7 @@ defmodule AshFsmTest do
 
   describe "transformers" do
     test "infers all states" do
-      assert Enum.sort(AshFsm.Info.fsm_all_states(ThreeStates)) ==
+      assert Enum.sort(AshStateMachine.Info.state_machine_all_states(ThreeStates)) ==
                Enum.sort([:executing, :pending, :complete])
     end
   end
@@ -65,15 +65,15 @@ defmodule AshFsmTest do
     end
 
     test "it transitions to the appropriate state" do
-      fsm = ThreeStates.create!()
+      state_machine = ThreeStates.create!()
 
-      assert ThreeStates.begin!(fsm).state == :executing
+      assert ThreeStates.begin!(state_machine).state == :executing
     end
 
     test "it transitions again to the appropriate state" do
-      fsm = ThreeStates.create!() |> ThreeStates.begin!()
+      state_machine = ThreeStates.create!() |> ThreeStates.begin!()
 
-      assert ThreeStates.complete!(fsm).state == :complete
+      assert ThreeStates.complete!(state_machine).state == :complete
     end
   end
 end

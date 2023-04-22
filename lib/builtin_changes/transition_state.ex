@@ -1,7 +1,7 @@
-defmodule AshFsm.BuiltinChanges.TransitionState do
+defmodule AshStateMachine.BuiltinChanges.TransitionState do
   use Ash.Resource.Change
 
   def change(changeset, opts, _) do
-    AshFsm.transition_state(changeset, opts[:target])
+    AshStateMachine.transition_state(changeset, opts[:target])
   end
 end

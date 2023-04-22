@@ -1,15 +1,18 @@
-defmodule AshFsm.Verifiers.VerifyDefaultInitialState do
+defmodule AshStateMachine.Verifiers.VerifyDefaultInitialState do
   use Spark.Dsl.Verifier
 
   def verify(dsl_state) do
     module = Spark.Dsl.Verifier.get_persisted(dsl_state, :module)
 
     attribute =
-      Ash.Resource.Info.attribute(dsl_state, AshFsm.Info.fsm_state_attribute!(dsl_state))
+      Ash.Resource.Info.attribute(
+        dsl_state,
+        AshStateMachine.Info.state_machine_state_attribute!(dsl_state)
+      )
 
-    case AshFsm.Info.fsm_default_initial_state(dsl_state) do
+    case AshStateMachine.Info.state_machine_default_initial_state(dsl_state) do
       {:ok, initial} when not is_nil(initial) ->
-        initial_states = AshFsm.Info.fsm_initial_states!(dsl_state)
+        initial_states = AshStateMachine.Info.state_machine_initial_states!(dsl_state)
 
         unless initial in initial_states do
           raise Spark.Error.DslError,
