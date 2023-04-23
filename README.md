@@ -11,3 +11,7 @@ def deps do
   ]
 end
 ```
+
+## Get Started
+
+Check out the [getting started guide](/documentation/tutorials/get-started-with-state-machines.md).
