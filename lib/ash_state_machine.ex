@@ -1,8 +1,4 @@
 defmodule AshStateMachine do
-  @moduledoc """
-  Documentation for `AshStateMachine`.
-  """
-
   defmodule Transition do
     @moduledoc """
     The configuration for an transition.
@@ -81,8 +77,26 @@ defmodule AshStateMachine do
     ]
   }
 
+  @sections [@state_machine]
+
+  @moduledoc """
+  Dsl documentation for AshStateMachine
+  <!--- ash-hq-hide-start --> <!--- -->
+
+  ## DSL Documentation
+
+  ### Index
+
+  #{Spark.Dsl.Extension.doc_index(@sections)}
+
+  ### Docs
+
+  #{Spark.Dsl.Extension.doc(@sections)}
+  <!--- ash-hq-hide-stop --> <!--- -->
+  """
+
   use Spark.Dsl.Extension,
-    sections: [@state_machine],
+    sections: @sections,
     transformers: [
       AshStateMachine.Transformers.FillInTransitionDefaults,
       AshStateMachine.Transformers.AddState,
