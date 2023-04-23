@@ -43,11 +43,12 @@ defmodule Order do
   end
 
   actions do
-    # create sets the st
+    # create sets the state
     defaults [:create, :read]
 
     update :confirm do
-      # accept [...] you can change other attributes
+      # accept [...] 
+      # you can change other attributes
       # or do anything else an action can normally do
       # this transition will be validated according to
       # the state machine rules above
@@ -84,6 +85,7 @@ defmodule Order do
                   message: message,
                   error_state: changeset.data.state
                 })
+                |> Api.update()
             end),
             on: [:update]
   end
