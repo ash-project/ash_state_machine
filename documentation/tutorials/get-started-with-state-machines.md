@@ -116,4 +116,7 @@ confirmed --> |error| error
 pending --> |error| error
 ```
 
+## Learning more
+
+- Check out the DSL  documentation in `AshStateMachine`
 
