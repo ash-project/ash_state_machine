@@ -1,4 +1,5 @@
 defmodule AshStateMachine.Verifiers.VerifyDefaultInitialState do
+  @moduledoc "Verifies the default initial state is in the list of initial states."
   use Spark.Dsl.Verifier
 
   def verify(dsl_state) do

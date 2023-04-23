@@ -1,4 +1,5 @@
 defmodule AshStateMachine.Transformers.EnsureStateSelected do
+  @moduledoc "Ensures that `state` is always selected on queries."
   use Spark.Dsl.Transformer
 
   def transform(dsl_state) do

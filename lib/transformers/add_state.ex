@@ -1,15 +1,12 @@
 defmodule AshStateMachine.Transformers.AddState do
+  @moduledoc "Adds or enforces details about the state attribute"
   use Spark.Dsl.Transformer
   alias Spark.Dsl.Transformer
 
   def after?(_), do: true
 
   def transform(dsl_state) do
-    deprecated_states =
-      case AshStateMachine.Info.state_machine_deprecated_states(dsl_state) do
-        {:ok, value} -> value || []
-        _ -> []
-      end
+    deprecated_states = AshStateMachine.Info.state_machine_deprecated_states!(dsl_state)
 
     all_states =
       Enum.uniq(AshStateMachine.Info.state_machine_all_states(dsl_state) ++ deprecated_states)

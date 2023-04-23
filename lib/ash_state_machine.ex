@@ -53,6 +53,7 @@ defmodule AshStateMachine do
     schema: [
       deprecated_states: [
         type: {:list, :atom},
+        default: [],
         doc: """
         A list of states that have been deprecated.
         The list of states is derived from the transitions normally.
@@ -118,5 +119,25 @@ defmodule AshStateMachine do
       _transition ->
         Ash.Changeset.force_change_attribute(changeset, attribute, target)
     end
+  end
+
+  def transition_state(%{action_type: :create} = changeset, target) do
+    attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
+
+    if target in AshStateMachine.Info.state_machine_initial_states!(changeset.resource) do
+      Ash.Changeset.force_change_attribute(changeset, attribute, target)
+    else
+      Ash.Changeset.add_error(
+        changeset,
+        AshStateMachine.Errors.InvalidInitialState.exception(
+          target: target,
+          action: changeset.action.name
+        )
+      )
+    end
+  end
+
+  def transition_state(other, _target) do
+    Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
   end
 end

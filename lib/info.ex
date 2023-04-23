@@ -1,4 +1,5 @@
 defmodule AshStateMachine.Info do
+  @moduledoc "Introspection helpers for `AshStateMachine`"
   use Spark.InfoGenerator, extension: AshStateMachine, sections: [:state_machine]
 
   @spec state_machine_transitions(Ash.Resource.record() | map(), name :: atom) ::
