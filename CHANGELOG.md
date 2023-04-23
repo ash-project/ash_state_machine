@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.1.1](https://github.com/ash-project/ash_state_machine/compare/v0.1.0...v0.1.1) (2023-04-23)
+
+
+
+
+### Improvements:
+
+* make state diagrams the default chart
+
 ## [v0.1.0](https://github.com/ash-project/ash_state_machine/compare/v0.1.0...v0.1.0) (2023-04-23)
 
 
