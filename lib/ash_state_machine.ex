@@ -67,9 +67,9 @@ defmodule AshStateMachine do
         default: :state
       ],
       initial_states: [
-        type: {:or, [{:list, :atom}, :atom]},
-        doc:
-          "The allowed starting states of this state machine. If not specified, all states are allowed."
+        type: {:list, :atom},
+        required: true,
+        doc: "The allowed starting states of this state machine."
       ],
       default_initial_state: [
         type: :atom,

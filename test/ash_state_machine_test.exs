@@ -8,6 +8,7 @@ defmodule AshStateMachineTest do
       extensions: [AshStateMachine]
 
     state_machine do
+      initial_states [:pending]
       default_initial_state :pending
 
       transitions do
