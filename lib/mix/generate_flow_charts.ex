@@ -11,6 +11,7 @@ defmodule Mix.Tasks.AshStateMachine.GenerateFlowCharts do
 
   ## Command line options
 
+    * `--type` - generates a given type. Valid values are `"state_diagram"` and `"flow_chart"`. Defaults to `"state_diagram"`.
     * `--only` - only generates the given Flow file
     * `--format` - Can be set to one of either:
       * `plain` - Prints just the mermaid output as text. This is the default.
@@ -30,8 +31,8 @@ defmodule Mix.Tasks.AshStateMachine.GenerateFlowCharts do
 
     {opts, _} =
       OptionParser.parse!(argv,
-        strict: [only: :keep, format: :string],
-        aliases: [o: :only, f: :format]
+        strict: [only: :keep, format: :string, type: :string],
+        aliases: [o: :only, f: :format, t: :type]
       )
 
     only =
@@ -47,11 +48,20 @@ defmodule Mix.Tasks.AshStateMachine.GenerateFlowCharts do
         source = state_machine.module_info(:compile)[:source]
 
         if is_nil(only) || Path.expand(source) in only do
+          diagram =
+            case opts[:type] || "state_diagram" do
+              "state_diagram" ->
+                AshStateMachine.Charts.mermaid_state_diagram(state_machine)
+
+              "flow_chart" ->
+                AshStateMachine.Charts.mermaid_flowchart(state_machine)
+            end
+
           Mix.Mermaid.generate_diagram(
             source,
             "mermaid-flowchart",
             format,
-            AshStateMachine.Charts.mermaid_flowchart(state_machine),
+            diagram,
             "Generated Mermaid flowchart for #{inspect(state_machine)}"
           )
         end

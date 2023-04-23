@@ -154,7 +154,7 @@ defmodule AshStateMachineTest do
 
   describe "charts" do
     test "it generates the appropriate chart" do
-      AshStateMachine.Charts.mermaid_flowchart(Order) |> IO.puts()
+      AshStateMachine.Charts.mermaid_state_diagram(Order) |> IO.puts()
 
       assert AshStateMachine.Charts.mermaid_flowchart(ThreeStates) ==
                """

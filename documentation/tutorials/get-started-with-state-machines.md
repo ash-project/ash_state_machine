@@ -107,13 +107,13 @@ end
 run `mix ash_state_machine.generate_flow_charts` to generate flow charts for your resources. See the task documentation for more. Here is a chart generated from the example above:
 
 ```mermaid
-flowchart TD
-pending --> |confirm| confirmed
-confirmed --> |begin_delivery| on_its_way
-on_its_way --> |package_arrived| arrived
-on_its_way --> |error| error
-confirmed --> |error| error
-pending --> |error| error
+stateDiagram-v2
+pending --> confirmed: confirm
+confirmed --> on_its_way: begin_delivery
+on_its_way --> arrived: package_arrived
+on_its_way --> error: error
+confirmed --> error: error
+pending --> error: error
 ```
 
 ## Learning more
