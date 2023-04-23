@@ -28,11 +28,13 @@ defmodule AshStateMachine do
       ],
       from: [
         type: {:or, [{:list, :atom}, :atom]},
+        required: true,
         doc:
           "The states in which this action may be called. If not specified, then any state is accepted."
       ],
       to: [
         type: {:or, [{:list, :atom}, :atom]},
+        required: true,
         doc:
           "The states that this action may move to. If not specified, then any state is accepted."
       ]

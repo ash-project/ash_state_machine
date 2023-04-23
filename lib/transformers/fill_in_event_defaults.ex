@@ -46,15 +46,6 @@ defmodule AshStateMachine.Transformers.FillInTransitionDefaults do
           Transformer.set_option(dsl_state, [:state_machine], :initial_states, all_states)
       end
 
-    {:ok,
-     transitions
-     |> Enum.reduce(dsl_state, fn transition, dsl_state ->
-       Transformer.replace_entity(dsl_state, [:state_machine], %{
-         transition
-         | from: transition.from || all_states,
-           to: transition.to || all_states
-       })
-     end)
-     |> Transformer.persist(:all_state_machine_states, all_states)}
+    {:ok, Transformer.persist(dsl_state, :all_state_machine_states, all_states)}
   end
 end
