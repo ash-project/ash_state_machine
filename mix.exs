@@ -98,27 +98,27 @@ defmodule AshStateMachine.MixProject do
             name: "AshStateMachine",
             target: "Ash.Resource",
             type: "StateMachine Resource"
-          },
-          %{
-            module: AshGraphql.Api,
-            name: "AshGraphql Api",
-            target: "Ash.Api",
-            type: "GraphQL Api"
           }
         ]
       ],
+      before_closing_body_tag: fn
+        :html ->
+          """
+          <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+          <script>mermaid.initialize({startOnLoad: true})</script>
+          """
+
+        _ ->
+          ""
+      end,
       extras: extras(),
       groups_for_extras: groups_for_extras(),
       groups_for_modules: [
-        AshGraphql: [
-          AshGraphql
+        Dsl: [
+          AshStateMachine
         ],
-        Introspection: [
-          AshGraphql.Resource.Info,
-          AshGraphql.Api.Info
-        ],
-        Miscellaneous: [
-          AshGraphql.Resource.Helpers
+        Charts: [
+          AshStateMachine.Charts
         ],
         Internals: ~r/.*/
       ]
