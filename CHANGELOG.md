@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.1.3](https://github.com/ash-project/ash_state_machine/compare/v0.1.2...v0.1.3) (2023-04-28)
+
+
+
+
+### Bug Fixes:
+
+* == not != for checking all states
+
 ## [v0.1.2](https://github.com/ash-project/ash_state_machine/compare/v0.1.1...v0.1.2) (2023-04-28)
 
 
