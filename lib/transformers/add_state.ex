@@ -68,7 +68,7 @@ defmodule AshStateMachine.Transformers.AddState do
 
         cond do
           type == Ash.Type.Atom ->
-            if Enum.sort(constraints[:one_of]) != Enum.sort(all_states) do
+            if Enum.sort(constraints[:one_of]) == Enum.sort(all_states) do
               {:ok, dsl_state}
             else
               raise Spark.Error.DslError,
@@ -81,15 +81,19 @@ defmodule AshStateMachine.Transformers.AddState do
             end
 
           function_exported?(type, :values, 0) ->
-            if Enum.sort(type.values()) != Enum.sort(all_states) do
+            if Enum.sort(type.values()) == Enum.sort(all_states) do
               {:ok, dsl_state}
             else
               raise Spark.Error.DslError,
                 module: module,
                 path: [:attributes, attribute.name],
                 message: """
-                Expected the attribute #{attribute.name} to have the `one_of` constraints with the following values:
+                Expected the attribute #{attribute.name} to support the following values:
                 #{inspect(Enum.sort(all_states))}
+
+                Got
+
+                #{inspect(Enum.sort(type.values()))}
                 """
             end
 
