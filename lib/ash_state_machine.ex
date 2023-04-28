@@ -80,7 +80,7 @@ defmodule AshStateMachine do
   @sections [@state_machine]
 
   @moduledoc """
-  Dsl documentation for AshStateMachine
+  Functions for working with AshStateMachine.
   <!--- ash-hq-hide-start --> <!--- -->
 
   ## DSL Documentation
@@ -110,6 +110,9 @@ defmodule AshStateMachine do
       AshStateMachine.BuiltinChanges
     ]
 
+  @doc """
+  A utility to transition the state of a changeset, honoring the rules of the resource.
+  """
   def transition_state(%{action_type: :update} = changeset, target) do
     transitions =
       AshStateMachine.Info.state_machine_transitions(changeset.resource, changeset.action.name)
