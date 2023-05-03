@@ -127,7 +127,7 @@ defmodule AshStateMachine do
         Ash.Changeset.add_error(
           changeset,
           AshStateMachine.Errors.NoMatchingTransition.exception(
-            from: old_state,
+            old_state: old_state,
             target: target,
             action: changeset.action.name
           )
