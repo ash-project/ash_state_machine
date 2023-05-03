@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.1.4](https://github.com/ash-project/ash_state_machine/compare/v0.1.3...v0.1.4) (2023-05-03)
+
+
+
+
+### Bug Fixes:
+
+* Rename `from` to `old_state` in `NoMatchingTransition` error (#3)
+
 ## [v0.1.3](https://github.com/ash-project/ash_state_machine/compare/v0.1.2...v0.1.3) (2023-04-28)
 
 
