@@ -30,7 +30,7 @@ defmodule AshStateMachine.Transformers.FillInTransitionDefaults do
     {:ok,
      transitions
      |> Enum.reduce(dsl_state, fn transition, dsl_state ->
-       Transformer.replace_entity(dsl_state, [:ash_state_machine, :transitions], %{
+       Transformer.replace_entity(dsl_state, [:state_machine, :transitions], %{
          transition
          | from: replace_star(transition.from, all_states),
            to: replace_star(transition.to, all_states)
