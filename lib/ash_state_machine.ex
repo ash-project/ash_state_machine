@@ -6,16 +6,18 @@ defmodule AshStateMachine do
     @type t :: %__MODULE__{
             action: atom,
             from: [atom],
-            to: [atom]
+            to: [atom],
+            __identifier__: any
           }
 
-    defstruct [:action, :from, :to]
+    defstruct [:action, :from, :to, :__identifier__]
   end
 
   @transition %Spark.Dsl.Entity{
     name: :transition,
     target: Transition,
     args: [:action],
+    identifier: {:auto, :unique_integer},
     schema: [
       action: [
         type: :atom,
@@ -26,13 +28,13 @@ defmodule AshStateMachine do
         type: {:or, [{:list, :atom}, :atom]},
         required: true,
         doc:
-          "The states in which this action may be called. If not specified, then any state is accepted."
+          "The states in which this action may be called. If not specified, then any state is accepted. Use `:*` to refer to all states."
       ],
       to: [
         type: {:or, [{:list, :atom}, :atom]},
         required: true,
         doc:
-          "The states that this action may move to. If not specified, then any state is accepted."
+          "The states that this action may move to. If not specified, then any state is accepted. Use `:*` to refer to all states."
       ]
     ]
   }
