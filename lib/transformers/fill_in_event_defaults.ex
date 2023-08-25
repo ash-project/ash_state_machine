@@ -17,6 +17,7 @@ defmodule AshStateMachine.Transformers.FillInTransitionDefaults do
       end)
       |> Enum.concat(List.wrap(initial_states))
       |> Enum.uniq()
+      |> Enum.reject(&(&1 == :*))
 
     dsl_state =
       Transformer.set_option(
