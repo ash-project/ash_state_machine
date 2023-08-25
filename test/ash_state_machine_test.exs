@@ -88,6 +88,7 @@ defmodule AshStateMachineTest do
       transitions do
         transition(:begin, from: :pending, to: :executing)
         transition(:complete, from: :executing, to: :complete)
+        transition(:*, from: :*, to: :pending)
       end
     end
 
@@ -128,7 +129,7 @@ defmodule AshStateMachineTest do
   end
 
   describe "transformers" do
-    test "infers all states" do
+    test "infers all states, excluding star (:*)" do
       assert Enum.sort(AshStateMachine.Info.state_machine_all_states(ThreeStates)) ==
                Enum.sort([:executing, :pending, :complete])
     end
