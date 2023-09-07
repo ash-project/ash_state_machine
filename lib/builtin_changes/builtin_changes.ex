@@ -9,4 +9,9 @@ defmodule AshStateMachine.BuiltinChanges do
   def transition_state(target) do
     {AshStateMachine.BuiltinChanges.TransitionState, target: target}
   end
+
+  @doc """
+  Try and transition to the next state.
+  """
+  def next_state, do: AshStateMachine.BuiltinChanges.NextState
 end
