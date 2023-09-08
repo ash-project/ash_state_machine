@@ -13,7 +13,8 @@ defmodule AshStateMachine.BuiltinChanges.NextState do
     changeset.resource
     |> AshStateMachine.Info.state_machine_transitions(changeset.action.name)
     |> Enum.filter(fn
-      %{from: from} when is_list(from) -> current_state in from
+      %{from: from} when is_list(from) -> current_state in from || :* in from
+      %{from: :*} -> true
       %{from: from} -> current_state == from
     end)
     |> Enum.flat_map(fn
