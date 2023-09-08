@@ -5,6 +5,19 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.0](https://github.com/ash-project/ash_state_machine/compare/v0.1.5...v0.2.0) (2023-09-08)
+
+
+
+
+### Features:
+
+* Add `next_state` builtin change. (#6)
+
+### Improvements:
+
+* exclude star from state_machine_all_states/1 to avoid inclusion in add_attribuet builder (#4)
+
 ## [v0.1.5](https://github.com/ash-project/ash_state_machine/compare/v0.1.4...v0.1.5) (2023-08-04)
 
 

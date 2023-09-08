@@ -7,7 +7,7 @@ A state machine extension for `Ash.Resource`
 ```elixir
 def deps do
   [
-    {:ash_state_machine, "~> 0.1.5"}
+    {:ash_state_machine, "~> 0.2.0"}
   ]
 end
 ```
