@@ -166,4 +166,65 @@ defmodule AshStateMachineTest do
                |> String.trim_trailing()
     end
   end
+
+  describe "next state" do
+    defmodule NextStateMachine do
+      @moduledoc false
+      use Ash.Resource,
+        extensions: [AshStateMachine]
+
+      state_machine do
+        initial_states [:a]
+        default_initial_state :a
+
+        transitions do
+          transition :next, from: :a, to: :b
+          transition :next, from: :b, to: :c
+          transition :next, from: :b, to: :d
+        end
+      end
+
+      attributes do
+        uuid_primary_key :id
+
+        attribute :state, :atom do
+          allow_nil? false
+          constraints one_of: [:a, :b, :c, :d]
+          default :a
+        end
+      end
+
+      actions do
+        defaults [:create]
+
+        update :next do
+          change next_state()
+        end
+      end
+
+      code_interface do
+        define_for Api
+        define :create
+        define :next
+      end
+    end
+
+    test "when there is only one next state, it transitions into it" do
+      assert {:ok, nsm} = NextStateMachine.create(%{state: :a})
+      assert {:ok, nsm} = NextStateMachine.next(nsm)
+      assert nsm.state == :b
+    end
+
+    test "when there is more than one next state, it makes an oopsie" do
+      assert {:ok, nsm} = NextStateMachine.create(%{state: :b})
+      assert {:error, reason} = NextStateMachine.next(nsm)
+      assert Exception.message(reason) =~ ~r/multiple next states/i
+    end
+
+    test "when there are no next states available, it also makes an oopsie" do
+      assert {:ok, nsm} = NextStateMachine.create(%{state: :c})
+      assert {:error, reason} = NextStateMachine.next(nsm)
+      assert Exception.message(reason) =~ ~r/no next state/i
+    end
+  end
 end
