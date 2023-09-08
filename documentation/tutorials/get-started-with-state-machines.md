@@ -10,7 +10,7 @@ If you haven't already, read the [Ash Getting Started Guide](https://hexdocs.pm/
 def deps()
   [
     ...
-    {:ash_state_machine, "~> 0.2.0"}
+    {:ash_state_machine, "~> 0.2.1"}
   ]
 end
 ```

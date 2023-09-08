@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.1](https://github.com/ash-project/ash_state_machine/compare/v0.2.0...v0.2.1) (2023-09-08)
+
+
+
+
+### Bug Fixes:
+
+* Allow `next_state` to to match transitions from *. (#7)
+
 ## [v0.2.0](https://github.com/ash-project/ash_state_machine/compare/v0.1.5...v0.2.0) (2023-09-08)
 
 
