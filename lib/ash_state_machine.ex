@@ -122,9 +122,7 @@ defmodule AshStateMachine do
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
     old_state = Map.get(changeset.data, attribute)
 
-    case Enum.find(transitions, fn transition ->
-           old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
-         end) do
+    case Enum.find(transitions, &valid_transition?(&1, {old_state, target})) do
       nil ->
         Ash.Changeset.add_error(
           changeset,
@@ -158,5 +156,13 @@ defmodule AshStateMachine do
 
   def transition_state(other, _target) do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
+  end
+
+  defp valid_transition?(%{from: from}, _) when from == :* or from == [:*] do
+    true
+  end
+
+  defp valid_transition?(transition, {from, to}) do
+    from in List.wrap(transition.from) and to in List.wrap(transition.to)
   end
 end

@@ -16,6 +16,7 @@ defmodule AshStateMachineTest do
         transition :begin_delivery, from: :confirmed, to: :on_its_way
         transition :package_arrived, from: :on_its_way, to: :arrived
         transition :error, from: [:pending, :confirmed, :on_its_way], to: :error
+        transition :abort, from: :*, to: :aborted
       end
     end
 
@@ -45,6 +46,11 @@ defmodule AshStateMachineTest do
         accept [:error_state, :error]
         change transition_state(:error)
       end
+
+      update :abort do
+        # accept [...]
+        change transition_state(:aborted)
+      end
     end
 
     changes do
@@ -63,6 +69,11 @@ defmodule AshStateMachineTest do
                  })
              end),
              on: [:update]
+    end
+
+    code_interface do
+      define_for AshStateMachineTest.Api
+      define :abort
     end
 
     attributes do
@@ -150,6 +161,13 @@ defmodule AshStateMachineTest do
       state_machine = ThreeStates.create!() |> ThreeStates.begin!()
 
       assert ThreeStates.complete!(state_machine).state == :complete
+    end
+
+    test "`from: :*` can transition from any state" do
+      for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
+        assert {:ok, machine} = Order.abort(%Order{state: state})
+        assert machine.state == :aborted
+      end
     end
   end
 
