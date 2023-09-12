@@ -17,6 +17,7 @@ defmodule AshStateMachineTest do
         transition :package_arrived, from: :on_its_way, to: :arrived
         transition :error, from: [:pending, :confirmed, :on_its_way], to: :error
         transition :abort, from: :*, to: :aborted
+        transition :reroute, from: :*, to: :rerouted
       end
     end
 
@@ -51,6 +52,14 @@ defmodule AshStateMachineTest do
         # accept [...]
         change transition_state(:aborted)
       end
+
+      update :reroute do
+        # accept [...]
+
+        # The defined transition for this route contains a `from: :*` but does not include `to: :aborted`
+        # This should never succeed
+        change transition_state(:aborted)
+      end
     end
 
     changes do
@@ -74,6 +83,7 @@ defmodule AshStateMachineTest do
     code_interface do
       define_for AshStateMachineTest.Api
       define :abort
+      define :reroute
     end
 
     attributes do
@@ -167,6 +177,13 @@ defmodule AshStateMachineTest do
       for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
         assert {:ok, machine} = Order.abort(%Order{state: state})
         assert machine.state == :aborted
+      end
+    end
+
+    test "`from: :*` cannot transition _to_ any state" do
+      for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
+        assert {:error, reason} = Order.reroute(%Order{state: state})
+        assert Exception.message(reason) =~ ~r/no matching transition/i
       end
     end
   end

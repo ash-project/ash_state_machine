@@ -158,11 +158,12 @@ defmodule AshStateMachine do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
   end
 
-  defp valid_transition?(%{from: from}, _) when from == :* or from == [:*] do
-    true
+  defp valid_transition?(transition, {from, to}) do
+    valid_transition_endpoint?(List.wrap(transition.from), from) &&
+      valid_transition_endpoint?(List.wrap(transition.to), to)
   end
 
-  defp valid_transition?(transition, {from, to}) do
-    from in List.wrap(transition.from) and to in List.wrap(transition.to)
+  def valid_transition_endpoint?(endpoint_list, value) do
+    endpoint_list == [:*] || value in endpoint_list
   end
 end
