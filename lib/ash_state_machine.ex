@@ -13,6 +13,8 @@ defmodule AshStateMachine do
     defstruct [:action, :from, :to, :__identifier__]
   end
 
+  require Logger
+
   @transition %Spark.Dsl.Entity{
     name: :transition,
     target: Transition,
@@ -56,7 +58,20 @@ defmodule AshStateMachine do
         A list of states that have been deprecated.
         The list of states is derived from the transitions normally.
         Use this option to express that certain types should still
+        be included in the derived state list even though no transitions
+        go to/from that state anymore. `:*` transitions will not include
+        these states.
+        """
+      ],
+      extra_states: [
+        type: {:list, :atom},
+        default: [],
+        doc: """
+        A list of states that may be used by transitions to/from `:*`
+        The list of states is derived from the transitions normally.
+        Use this option to express that certain types should still
         be included even though no transitions go to/from that state anymore.
+        `:*` transitions will include these states.
         """
       ],
       state_attribute: [
@@ -122,21 +137,46 @@ defmodule AshStateMachine do
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
     old_state = Map.get(changeset.data, attribute)
 
-    case Enum.find(transitions, fn transition ->
-           old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
-         end) do
-      nil ->
-        Ash.Changeset.add_error(
-          changeset,
-          AshStateMachine.Errors.NoMatchingTransition.exception(
-            old_state: old_state,
-            target: target,
-            action: changeset.action.name
+    if target in AshStateMachine.Info.state_machine_all_states(changeset.resource) do
+      case Enum.find(transitions, fn transition ->
+             old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
+           end) do
+        nil ->
+          Ash.Changeset.add_error(
+            changeset,
+            AshStateMachine.Errors.NoMatchingTransition.exception(
+              old_state: old_state,
+              target: target,
+              action: changeset.action.name
+            )
           )
-        )
 
-      _transition ->
-        Ash.Changeset.force_change_attribute(changeset, attribute, target)
+        _transition ->
+          Ash.Changeset.force_change_attribute(changeset, attribute, target)
+      end
+    else
+      Logger.error("""
+      Attempted to transition to an unknown state.
+
+      This usually means that one of the following is true:
+
+      * You have a missing transition definition in your state machine
+
+        To remediate this, add a transition.
+
+      * You are using `:*` to include a state that appears nowhere in the state machine definition
+
+        To remediate this, add the `extra_states` option and include the state #{inspect(target)}
+      """)
+
+      Ash.Changeset.add_error(
+        changeset,
+        AshStateMachine.Errors.NoMatchingTransition.exception(
+          old_state: old_state,
+          target: target,
+          action: changeset.action.name
+        )
+      )
     end
   end
 

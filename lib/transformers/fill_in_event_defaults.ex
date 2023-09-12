@@ -16,6 +16,7 @@ defmodule AshStateMachine.Transformers.FillInTransitionDefaults do
         List.wrap(transition.from) ++ List.wrap(transition.to)
       end)
       |> Enum.concat(List.wrap(initial_states))
+      |> Enum.concat(List.wrap(AshStateMachine.Info.state_machine_extra_states!(dsl_state)))
       |> Enum.uniq()
       |> Enum.reject(&(&1 == :*))
 

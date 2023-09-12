@@ -16,6 +16,8 @@ defmodule AshStateMachineTest do
         transition :begin_delivery, from: :confirmed, to: :on_its_way
         transition :package_arrived, from: :on_its_way, to: :arrived
         transition :error, from: [:pending, :confirmed, :on_its_way], to: :error
+        transition :abort, from: :*, to: :aborted
+        transition :reroute, from: :*, to: :rerouted
       end
     end
 
@@ -45,6 +47,19 @@ defmodule AshStateMachineTest do
         accept [:error_state, :error]
         change transition_state(:error)
       end
+
+      update :abort do
+        # accept [...]
+        change transition_state(:aborted)
+      end
+
+      update :reroute do
+        # accept [...]
+
+        # The defined transition for this route contains a `from: :*` but does not include `to: :aborted`
+        # This should never succeed
+        change transition_state(:aborted)
+      end
     end
 
     changes do
@@ -63,6 +78,12 @@ defmodule AshStateMachineTest do
                  })
              end),
              on: [:update]
+    end
+
+    code_interface do
+      define_for AshStateMachineTest.Api
+      define :abort
+      define :reroute
     end
 
     attributes do
@@ -151,17 +172,32 @@ defmodule AshStateMachineTest do
 
       assert ThreeStates.complete!(state_machine).state == :complete
     end
+
+    test "`from: :*` can transition from any state" do
+      for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
+        assert {:ok, machine} = Order.abort(%Order{state: state})
+        assert machine.state == :aborted
+      end
+    end
+
+    test "`from: :*` cannot transition _to_ any state" do
+      for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
+        assert {:error, reason} = Order.reroute(%Order{state: state})
+        assert Exception.message(reason) =~ ~r/no matching transition/i
+      end
+    end
   end
 
   describe "charts" do
     test "it generates the appropriate chart" do
-      AshStateMachine.Charts.mermaid_state_diagram(Order) |> IO.puts()
-
       assert AshStateMachine.Charts.mermaid_flowchart(ThreeStates) ==
                """
                flowchart TD
                pending --> |begin| executing
                executing --> |complete| complete
+               complete -->  pending
+               executing -->  pending
+               pending -->  pending
                """
                |> String.trim_trailing()
     end
