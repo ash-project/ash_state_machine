@@ -6,23 +6,8 @@ defmodule AshStateMachine.BuiltinChanges.NextState do
   use Ash.Resource.Change
 
   def change(changeset, _opts, _) do
-    attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
-
-    current_state = Map.get(changeset.data, attribute)
-
-    changeset.resource
-    |> AshStateMachine.Info.state_machine_transitions(changeset.action.name)
-    |> Enum.filter(fn
-      %{from: from} when is_list(from) -> current_state in from || :* in from
-      %{from: :*} -> true
-      %{from: from} -> current_state == from
-    end)
-    |> Enum.flat_map(fn
-      %{to: to} when is_list(to) -> to
-      %{to: to} -> [to]
-    end)
-    |> Enum.uniq()
-    |> Enum.reject(&(&1 == :*))
+    changeset.data
+    |> AshStateMachine.possible_next_states(changeset.action.name)
     |> case do
       [to] ->
         AshStateMachine.transition_state(changeset, to)

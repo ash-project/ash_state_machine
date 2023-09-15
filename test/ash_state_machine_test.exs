@@ -263,4 +263,18 @@ defmodule AshStateMachineTest do
       assert Exception.message(reason) =~ ~r/no next state/i
     end
   end
+
+  describe "possible_next_states/1" do
+    test "it correctly returns the next states" do
+      record = ThreeStates.create!(%{status: :complete})
+      assert [:executing, :pending] = AshStateMachine.possible_next_states(record)
+    end
+  end
+
+  describe "possible_next_states/2" do
+    test "it correctly returns the next states" do
+      record = ThreeStates.create!(%{status: :complete})
+      assert [:pending] = AshStateMachine.possible_next_states(record, :complete)
+    end
+  end
 end
