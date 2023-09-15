@@ -152,7 +152,8 @@ defmodule AshStateMachine.MixProject do
       sobelow: "sobelow --skip",
       credo: "credo --strict",
       docs: ["docs", "ash.replace_doc_links"],
-      "spark.formatter": "spark.formatter --extensions AshStateMachine"
+      "spark.formatter": "spark.formatter --extensions AshStateMachine",
+      "spark.cheat_sheets": "spark.cheat_sheets --extensions AshStateMachine"
     ]
   end
 end

@@ -1,0 +1,148 @@
+# DSL: AshStateMachine
+
+Functions for working with AshStateMachine.
+<!--- ash-hq-hide-start --> <!--- -->
+
+## DSL Documentation
+
+### Index
+
+  * state_machine
+    * transitions
+      * transition
+
+### Docs
+
+## state_machine
+
+
+
+ * [transitions](#module-transitions)
+   * transition
+
+
+
+
+
+---
+
+* `:deprecated_states` (list of `t:atom/0`) - A list of states that have been deprecated.
+  The list of states is derived from the transitions normally.
+  Use this option to express that certain types should still
+  be included in the derived state list even though no transitions
+  go to/from that state anymore. `:*` transitions will not include
+  these states. The default value is `[]`.
+
+* `:extra_states` (list of `t:atom/0`) - A list of states that may be used by transitions to/from `:*`
+  The list of states is derived from the transitions normally.
+  Use this option to express that certain types should still
+  be included even though no transitions go to/from that state anymore.
+  `:*` transitions will include these states. The default value is `[]`.
+
+* `:state_attribute` (`t:atom/0`) - The attribute to store the state in. The default value is `:state`.
+
+* `:initial_states` (list of `t:atom/0`) - Required. The allowed starting states of this state machine.
+
+* `:default_initial_state` (`t:atom/0`) - The default initial state
+
+
+
+
+
+### transitions
+
+
+
+ * [transition](#module-transition)
+
+
+
+
+
+---
+
+
+
+#### transition
+
+
+
+
+
+
+
+* `:action` (`t:atom/0`) - The corresponding action that is invoked for the transition. Use `:*` to allow any update action to perform this transition.
+
+* `:from` - Required. The states in which this action may be called. If not specified, then any state is accepted. Use `:*` to refer to all states.
+
+* `:to` - Required. The states that this action may move to. If not specified, then any state is accepted. Use `:*` to refer to all states.
+
+
+
+
+
+
+
+
+
+<!--- ash-hq-hide-stop --> <!--- -->
+
+
+## state_machine
+
+
+ * [transitions](#state_machine-transitions)
+   * transition
+
+
+
+
+### Options
+| Name | Type | Default | Docs |
+| ---  | ---  | ---     | ---  |
+| `deprecated_states` | `list(atom)` | [] | A list of states that have been deprecated. The list of states is derived from the transitions normally. Use this option to express that certain types should still be included in the derived state list even though no transitions go to/from that state anymore. `:*` transitions will not include these states. |
+| `extra_states` | `list(atom)` | [] | A list of states that may be used by transitions to/from `:*` The list of states is derived from the transitions normally. Use this option to express that certain types should still be included even though no transitions go to/from that state anymore. `:*` transitions will include these states. |
+| `state_attribute` | `atom` | :state | The attribute to store the state in. |
+| `initial_states`* | `list(atom)` |  | The allowed starting states of this state machine. |
+| `default_initial_state` | `atom` |  | The default initial state |
+
+
+## state_machine.transitions
+
+ * [transition](#state_machine-transitions-transition)
+
+
+
+
+## state_machine.transitions.transition
+
+
+
+
+
+
+
+
+### Arguments
+| Name | Type | Default | Docs |
+| ---  | ---  | ---     | ---  |
+| `action` | `atom` |  | The corresponding action that is invoked for the transition. Use `:*` to allow any update action to perform this transition. |
+### Options
+| Name | Type | Default | Docs |
+| ---  | ---  | ---     | ---  |
+| `from`* | `list(atom) \| atom` |  | The states in which this action may be called. If not specified, then any state is accepted. Use `:*` to refer to all states. |
+| `to`* | `list(atom) \| atom` |  | The states that this action may move to. If not specified, then any state is accepted. Use `:*` to refer to all states. |
+
+
+
+
+
+### Introspection
+
+Target: `AshStateMachine.Transition`
+
+
+
+
+
+
