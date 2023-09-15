@@ -51,7 +51,7 @@ defmodule AshStateMachine.MixProject do
     |> Enum.map(fn path ->
       title =
         path
-        |> Path.basename(".livemd")
+        |> Path.basename(".md")
         |> Path.basename(".cheatmd")
         |> Path.basename(".livemd")
         |> String.split(~r/[-_]/)
