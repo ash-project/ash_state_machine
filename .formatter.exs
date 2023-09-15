@@ -1,6 +1,7 @@
 spark_locals_without_parens = [
   default_initial_state: 1,
   deprecated_states: 1,
+  extra_states: 1,
   from: 1,
   initial_states: 1,
   state_attribute: 1,

@@ -199,4 +199,40 @@ defmodule AshStateMachine do
   def transition_state(other, _target) do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
   end
+
+  @doc """
+  A reusable helper which returns all possible next states for a record
+  (regardless of action).
+  """
+  @spec possible_next_states(Ash.Resource.record()) :: [atom]
+  def possible_next_states(%resource{} = record) do
+    state_attribute = AshStateMachine.Info.state_machine_state_attribute!(resource)
+    current_state = Map.fetch!(record, state_attribute)
+
+    resource
+    |> AshStateMachine.Info.state_machine_transitions()
+    |> Enum.map(&%{from: List.wrap(&1.from), to: List.wrap(&1.to)})
+    |> Enum.filter(&(current_state in &1.from or :* in &1.from))
+    |> Enum.flat_map(& &1.to)
+    |> Enum.reject(&(&1 == :*))
+    |> Enum.uniq()
+  end
+
+  @doc """
+  A reusable helper which returns all possible next states for a record given a
+  specific action.
+  """
+  @spec possible_next_states(Ash.Resource.record(), atom) :: [atom]
+  def possible_next_states(%resource{} = record, action_name) when is_atom(action_name) do
+    state_attribute = AshStateMachine.Info.state_machine_state_attribute!(resource)
+    current_state = Map.fetch!(record, state_attribute)
+
+    resource
+    |> AshStateMachine.Info.state_machine_transitions(action_name)
+    |> Enum.map(&%{from: List.wrap(&1.from), to: List.wrap(&1.to)})
+    |> Enum.filter(&(current_state in &1.from or :* in &1.from))
+    |> Enum.flat_map(& &1.to)
+    |> Enum.reject(&(&1 == :*))
+    |> Enum.uniq()
+  end
 end
