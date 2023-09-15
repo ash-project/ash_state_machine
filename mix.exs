@@ -55,7 +55,7 @@ defmodule AshStateMachine.MixProject do
         |> Path.basename(".cheatmd")
         |> Path.basename(".livemd")
         |> String.split(~r/[-_]/)
-        |> Enum.map(&String.capitalize/1)
+        |> Enum.map(&capitalize_first/1)
         |> Enum.join(" ")
         |> case do
           "F A Q" ->
@@ -70,6 +70,11 @@ defmodule AshStateMachine.MixProject do
          title: title
        ]}
     end)
+  end
+
+  defp capitalize_first(string) do
+    [h | t] = String.graphemes(string)
+    String.capitalize(h) <> Enum.join(t)
   end
 
   defp groups_for_extras() do
