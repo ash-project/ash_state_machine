@@ -5,6 +5,25 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.2](https://github.com/ash-project/ash_state_machine/compare/v0.2.1...v0.2.2) (2023-09-15)
+
+
+
+
+### Bug Fixes:
+
+* scrub `:*` from the list of states
+
+* proper entity path in replace logic
+
+### Improvements:
+
+* Add `possible_next_states` helper. (#9)
+
+* Add `possible_next_states` helper.
+
+* detect states used that don't exist and log an error
+
 ## [v0.2.1](https://github.com/ash-project/ash_state_machine/compare/v0.2.0...v0.2.1) (2023-09-08)
 
 
