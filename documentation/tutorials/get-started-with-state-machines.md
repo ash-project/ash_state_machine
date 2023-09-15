@@ -47,7 +47,7 @@ defmodule Order do
     defaults [:create, :read]
 
     update :confirm do
-      # accept [...] 
+      # accept [...]
       # you can change other attributes
       # or do anything else an action can normally do
       # this transition will be validated according to
@@ -118,5 +118,5 @@ pending --> error: error
 
 ## Learning more
 
-- Check out the DSL  documentation in `AshStateMachine`
-
+- Check out the [DSL documentation](dsl-ashstatemachine.html)
+- Check out the `AshStateMachine` module docs.
