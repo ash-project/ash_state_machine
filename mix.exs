@@ -46,12 +46,14 @@ defmodule AshStateMachine.MixProject do
   end
 
   defp extras() do
-    "documentation/**/*.md"
+    "documentation/**/*.{md,cheatmd,livemd}"
     |> Path.wildcard()
     |> Enum.map(fn path ->
       title =
         path
-        |> Path.basename(".md")
+        |> Path.basename(".livemd")
+        |> Path.basename(".cheatmd")
+        |> Path.basename(".livemd")
         |> String.split(~r/[-_]/)
         |> Enum.map(&String.capitalize/1)
         |> Enum.join(" ")
@@ -71,23 +73,19 @@ defmodule AshStateMachine.MixProject do
   end
 
   defp groups_for_extras() do
-    "documentation/*"
-    |> Path.wildcard()
-    |> Enum.map(fn folder ->
-      name =
-        folder
-        |> Path.basename()
-        |> String.split(~r/[-_]/)
-        |> Enum.map(&String.capitalize/1)
-        |> Enum.join(" ")
-
-      {name, folder |> Path.join("**") |> Path.wildcard()}
-    end)
+    [
+      Tutorials: [
+        ~r'documentation/tutorials'
+      ],
+      "How To": ~r'documentation/how_to',
+      Topics: ~r'documentation/topics',
+      DSLs: ~r'documentation/dsls'
+    ]
   end
 
   defp docs do
     [
-      main: "AshStateMachine",
+      main: "get-started-with-state-machines",
       source_ref: "v#{@version}",
       logo: "logos/small-logo.png",
       extra_section: "GUIDES",
@@ -136,7 +134,8 @@ defmodule AshStateMachine.MixProject do
   defp deps do
     [
       {:ash, "~> 2.7"},
-      {:spark, ">= 1.1.22"},
+      # {:spark, ">= 1.1.22"},
+      {:spark, path: "../spark", override: true},
       {:ex_doc, "~> 0.22", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12.0", only: [:dev, :test]},
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
@@ -151,9 +150,15 @@ defmodule AshStateMachine.MixProject do
     [
       sobelow: "sobelow --skip",
       credo: "credo --strict",
-      docs: ["docs", "ash.replace_doc_links"],
+      docs: [
+        "spark.cheat_sheets",
+        "docs",
+        "ash.replace_doc_links",
+        "spark.cheat_sheets_in_search"
+      ],
       "spark.formatter": "spark.formatter --extensions AshStateMachine",
-      "spark.cheat_sheets": "spark.cheat_sheets --extensions AshStateMachine"
+      "spark.cheat_sheets": "spark.cheat_sheets --extensions AshStateMachine",
+      "spark.cheat_sheets_in_search": "spark.cheat_sheets_in_search --extensions AshStateMachine"
     ]
   end
 end

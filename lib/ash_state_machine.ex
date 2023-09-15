@@ -23,6 +23,7 @@ defmodule AshStateMachine do
     schema: [
       action: [
         type: :atom,
+        required: true,
         doc:
           "The corresponding action that is invoked for the transition. Use `:*` to allow any update action to perform this transition."
       ],
@@ -43,6 +44,20 @@ defmodule AshStateMachine do
 
   @transitions %Spark.Dsl.Section{
     name: :transitions,
+    describe: """
+    # Wildcards
+    Use `:*` to represent "any action" when used in place of an action, or "any state" when used in place of a state.
+
+    ```elixir
+    transition :*, from: :*, to: :*
+    ```
+
+    The full list of states is derived at compile time from the transitions.
+    Use the `extra_states` to express that certain types should be included
+    in that list even though no transitions go to/from that state explicitly.
+    This is necessary for cases where there are states that use `:*` and no
+    transition explicitly leads to that transition.
+    """,
     entities: [
       @transition
     ]
@@ -55,23 +70,14 @@ defmodule AshStateMachine do
         type: {:list, :atom},
         default: [],
         doc: """
-        A list of states that have been deprecated.
-        The list of states is derived from the transitions normally.
-        Use this option to express that certain types should still
-        be included in the derived state list even though no transitions
-        go to/from that state anymore. `:*` transitions will not include
-        these states.
+        A list of states that have been deprecated but are still valid. These will still be in the possible list of states, but `:*` will not include them.
         """
       ],
       extra_states: [
         type: {:list, :atom},
         default: [],
         doc: """
-        A list of states that may be used by transitions to/from `:*`
-        The list of states is derived from the transitions normally.
-        Use this option to express that certain types should still
-        be included even though no transitions go to/from that state anymore.
-        `:*` transitions will include these states.
+        A list of states that may be used by transitions to/from `:*`. See the docs on wildcards for more.
         """
       ],
       state_attribute: [
@@ -97,19 +103,7 @@ defmodule AshStateMachine do
   @sections [@state_machine]
 
   @moduledoc """
-  Functions for working with AshStateMachine.
-  <!--- ash-hq-hide-start --> <!--- -->
-
-  ## DSL Documentation
-
-  ### Index
-
-  #{Spark.Dsl.Extension.doc_index(@sections)}
-
-  ### Docs
-
-  #{Spark.Dsl.Extension.doc(@sections)}
-  <!--- ash-hq-hide-stop --> <!--- -->
+  Provides tools for defining and working with resource-backed state machines.
   """
 
   use Spark.Dsl.Extension,
