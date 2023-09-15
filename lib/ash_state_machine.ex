@@ -48,6 +48,8 @@ defmodule AshStateMachine do
     # Wildcards
     Use `:*` to represent "any action" when used in place of an action, or "any state" when used in place of a state.
 
+    For example:
+
     ```elixir
     transition :*, from: :*, to: :*
     ```

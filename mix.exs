@@ -149,8 +149,7 @@ defmodule AshStateMachine.MixProject do
   defp deps do
     [
       {:ash, "~> 2.7"},
-      # {:spark, ">= 1.1.22"},
-      {:spark, path: "../spark", override: true},
+      {:spark, ">= 1.1.22"},
       {:ex_doc, "~> 0.22", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12.0", only: [:dev, :test]},
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},

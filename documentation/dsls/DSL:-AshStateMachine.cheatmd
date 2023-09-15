@@ -6,8 +6,10 @@ Provides tools for defining and working with resource-backed state machines.
 ## state_machine
 
 
+### Nested DSLs
  * [transitions](#state_machine-transitions)
    * transition
+
 
 
 
@@ -15,16 +17,33 @@ Provides tools for defining and working with resource-backed state machines.
 ### Options
 | Name | Type | Default | Docs |
 | ---  | ---  | ---     | ---  |
+| `initial_states`* | `list(atom)` |  | The allowed starting states of this state machine. |
 | `deprecated_states` | `list(atom)` | [] | A list of states that have been deprecated but are still valid. These will still be in the possible list of states, but `:*` will not include them. |
 | `extra_states` | `list(atom)` | [] | A list of states that may be used by transitions to/from `:*`. See the docs on wildcards for more. |
 | `state_attribute` | `atom` | :state | The attribute to store the state in. |
-| `initial_states`* | `list(atom)` |  | The allowed starting states of this state machine. |
 | `default_initial_state` | `atom` |  | The default initial state |
 
 
 ## state_machine.transitions
+### Wildcards
+Use `:*` to represent "any action" when used in place of an action, or "any state" when used in place of a state.
 
+For example:
+
+```elixir
+transition :*, from: :*, to: :*
+```
+
+The full list of states is derived at compile time from the transitions.
+Use the `extra_states` to express that certain types should be included
+in that list even though no transitions go to/from that state explicitly.
+This is necessary for cases where there are states that use `:*` and no
+transition explicitly leads to that transition.
+
+
+### Nested DSLs
  * [transition](#state_machine-transitions-transition)
+
 
 
 
