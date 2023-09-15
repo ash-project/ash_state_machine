@@ -1,8 +1,5 @@
 defmodule AshStateMachine.BuiltinChanges.NextState do
-  @moduledoc """
-  Given the action and the current state, attempt to find the next state to
-  transition into.
-  """
+  @moduledoc false
   use Ash.Resource.Change
 
   def change(changeset, _opts, _) do

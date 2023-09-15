@@ -1,5 +1,6 @@
 defmodule AshStateMachine.Transformers.AddState do
-  @moduledoc "Adds or enforces details about the state attribute"
+  # Adds or enforces details about the state attribute
+  @moduledoc false
   use Spark.Dsl.Transformer
   alias Spark.Dsl.Transformer
 

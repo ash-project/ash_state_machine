@@ -1,7 +1,7 @@
 defmodule AshStateMachine.Transformers.FillInTransitionDefaults do
+  @moduledoc false
   use Spark.Dsl.Transformer
   alias Spark.Dsl.Transformer
-  @moduledoc false
 
   def transform(dsl_state) do
     initial_states = AshStateMachine.Info.state_machine_initial_states!(dsl_state)

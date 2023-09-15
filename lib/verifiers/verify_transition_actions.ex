@@ -1,5 +1,6 @@
 defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
-  @moduledoc "Verifies that each transition corresponds to an update action"
+  # Verifies that each transition corresponds to an update action
+  @moduledoc false
   use Spark.Dsl.Verifier
 
   def verify(dsl_state) do

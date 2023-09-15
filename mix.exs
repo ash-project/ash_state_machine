@@ -115,8 +115,18 @@ defmodule AshStateMachine.MixProject do
         Dsl: [
           AshStateMachine
         ],
+        Introspection: [
+          AshStateMachine.Info,
+          AshStateMachine.Transition
+        ],
+        Helpers: [
+          AshStateMachine.BuiltinChanges
+        ],
         Charts: [
           AshStateMachine.Charts
+        ],
+        Errors: [
+          ~r/AshStateMachine.Errors/
         ],
         Internals: ~r/.*/
       ]

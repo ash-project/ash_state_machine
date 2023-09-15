@@ -11,7 +11,7 @@ defmodule AshStateMachine.BuiltinChanges do
   end
 
   @doc """
-  Try and transition to the next state.
+  Try and transition to the next state. Must be only one possible next state.
   """
   def next_state, do: AshStateMachine.BuiltinChanges.NextState
 end
