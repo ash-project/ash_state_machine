@@ -150,7 +150,7 @@ defmodule AshStateMachine.MixProject do
     [
       {:ash, "~> 2.7"},
       {:spark, ">= 1.1.22"},
-      {:ex_doc, "~> 0.22", only: [:dev, :test], runtime: false},
+      {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12.0", only: [:dev, :test]},
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
@@ -167,7 +167,7 @@ defmodule AshStateMachine.MixProject do
       docs: [
         "spark.cheat_sheets",
         "docs",
-        "ash.replace_doc_links",
+        "spark.replace_doc_links",
         "spark.cheat_sheets_in_search"
       ],
       "spark.formatter": "spark.formatter --extensions AshStateMachine",
