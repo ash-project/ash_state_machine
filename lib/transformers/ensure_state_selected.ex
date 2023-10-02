@@ -1,5 +1,5 @@
 defmodule AshStateMachine.Transformers.EnsureStateSelected do
-  #Ensures that `state` is always selected on queries.
+  # Ensures that `state` is always selected on queries.
   @moduledoc false
   use Spark.Dsl.Transformer
 
