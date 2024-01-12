@@ -45,49 +45,6 @@ defmodule AshStateMachine.MixProject do
     ["lib"]
   end
 
-  defp extras() do
-    "documentation/**/*.{md,cheatmd,livemd}"
-    |> Path.wildcard()
-    |> Enum.map(fn path ->
-      title =
-        path
-        |> Path.basename(".md")
-        |> Path.basename(".cheatmd")
-        |> Path.basename(".livemd")
-        |> String.split(~r/[-_]/)
-        |> Enum.map(&capitalize_first/1)
-        |> Enum.join(" ")
-        |> case do
-          "F A Q" ->
-            "FAQ"
-
-          other ->
-            other
-        end
-
-      {String.to_atom(path),
-       [
-         title: title
-       ]}
-    end)
-  end
-
-  defp capitalize_first(string) do
-    [h | t] = String.graphemes(string)
-    String.capitalize(h) <> Enum.join(t)
-  end
-
-  defp groups_for_extras() do
-    [
-      Tutorials: [
-        ~r'documentation/tutorials'
-      ],
-      "How To": ~r'documentation/how_to',
-      Topics: ~r'documentation/topics',
-      DSLs: ~r'documentation/dsls'
-    ]
-  end
-
   defp docs do
     [
       main: "get-started-with-state-machines",
@@ -129,8 +86,16 @@ defmodule AshStateMachine.MixProject do
         _ ->
           ""
       end,
-      extras: extras(),
-      groups_for_extras: groups_for_extras(),
+      extras: [
+        "documentation/tutorials/get-started-with-state-machines.md",
+        "documentation/dsls/DSL:-AshStateMachine.md"
+      ],
+      groups_for_extras: [
+        Tutorials: ~r'documentation/tutorials',
+        "How To": ~r'documentation/how_to',
+        Topics: ~r'documentation/topics',
+        DSLs: ~r'documentation/dsls'
+      ],
       groups_for_modules: [
         Dsl: [
           AshStateMachine
