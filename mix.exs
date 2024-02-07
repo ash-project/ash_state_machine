@@ -66,16 +66,6 @@ defmodule AshStateMachine.MixProject do
           """
         end
       end,
-      spark: [
-        extensions: [
-          %{
-            module: AshStateMachine,
-            name: "AshStateMachine",
-            target: "Ash.Resource",
-            type: "StateMachine Resource"
-          }
-        ]
-      ],
       before_closing_body_tag: fn
         :html ->
           """
@@ -128,7 +118,7 @@ defmodule AshStateMachine.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ash, "~> 2.7"},
+      {:ash, ash_version("~> 2.7")},
       {:spark, ">= 1.1.22"},
       {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12.0", only: [:dev, :test]},
@@ -155,4 +145,14 @@ defmodule AshStateMachine.MixProject do
       "spark.cheat_sheets_in_search": "spark.cheat_sheets_in_search --extensions AshStateMachine"
     ]
   end
+
+  defp ash_version(default_version) do
+    case System.get_env("ASH_VERSION") do
+      nil -> default_version
+      "local" -> [path: "../ash"]
+      "main" -> [git: "https://github.com/ash-project/ash.git"]
+      version -> "~> #{version}"
+    end
+  end
+
 end
