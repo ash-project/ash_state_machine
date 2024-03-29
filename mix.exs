@@ -118,15 +118,14 @@ defmodule AshStateMachine.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ash, ash_version("~> 2.7")},
-      {:spark, ">= 1.1.22"},
+      {:ash, ash_version("~> 3.0.0-rc.0")},
       {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
-      {:ex_check, "~> 0.12.0", only: [:dev, :test]},
+      {:ex_check, "~> 0.12", only: [:dev, :test]},
       {:credo, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:dialyxir, ">= 0.0.0", only: [:dev, :test], runtime: false},
       {:sobelow, ">= 0.0.0", only: [:dev, :test], runtime: false},
-      {:git_ops, "~> 2.5.1", only: [:dev, :test]},
-      {:excoveralls, "~> 0.13.0", only: [:dev, :test]}
+      {:git_ops, "~> 2.5", only: [:dev, :test]},
+      {:excoveralls, "~> 0.13", only: [:dev, :test]}
     ]
   end
 
@@ -154,5 +153,4 @@ defmodule AshStateMachine.MixProject do
       version -> "~> #{version}"
     end
   end
-
 end

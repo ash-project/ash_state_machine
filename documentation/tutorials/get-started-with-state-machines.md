@@ -21,7 +21,6 @@ The concept of a state machine (in this case a "Finite State Machine"), essentia
 
 This extension's goal is to help you write clear and clean state machines, with all of the extensibility and power of Ash resources and actions.
 
-
 ## A basic state machine
 
 ```elixir
@@ -74,10 +73,10 @@ defmodule Order do
   changes do
     # any failures should be captured and transitioned to the error state
     change after_transaction(fn
-              changeset, {:ok, result} ->
+              changeset, {:ok, result}, _context ->
                 {:ok, result}
 
-              changeset, {:error, error} ->
+              changeset, {:error, error}, _context ->
                 message = Exception.message(error)
 
                 changeset.data
@@ -85,7 +84,7 @@ defmodule Order do
                   message: message,
                   error_state: changeset.data.state
                 })
-                |> Api.update()
+                |> Ash.update()
             end),
             on: [:update]
   end

@@ -5,6 +5,7 @@ defmodule AshStateMachineTest do
   defmodule Order do
     # leaving out data layer configuration for brevity
     use Ash.Resource,
+      domain: AshStateMachineTest.Domain,
       extensions: [AshStateMachine]
 
     state_machine do
@@ -22,6 +23,7 @@ defmodule AshStateMachineTest do
     end
 
     actions do
+      default_accept :*
       # create sets the st
       defaults [:create, :read]
 
@@ -64,11 +66,10 @@ defmodule AshStateMachineTest do
 
     changes do
       # any failures should be captured and transitioned to the error state
-      change after_transaction(fn
-               changeset, {:ok, result} ->
+      change after_transaction(fn changeset, {:ok, result}, _ ->
                  {:ok, result}
 
-               changeset, {:error, error} ->
+               changeset, {:error, error}, _ ->
                  message = Exception.message(error)
 
                  changeset.data
@@ -81,7 +82,6 @@ defmodule AshStateMachineTest do
     end
 
     code_interface do
-      define_for AshStateMachineTest.Api
       define :abort
       define :reroute
     end
@@ -89,8 +89,8 @@ defmodule AshStateMachineTest do
     attributes do
       uuid_primary_key :id
       # ...attributes like address/delivery options would go here
-      attribute :error, :string
-      attribute :error_state, :string
+      attribute :error, :string, public?: true
+      attribute :error_state, :string, public?: true
       # :state attribute is added for you by `state_machine`
       # however, you can add it yourself, and you will be guided by
       # compile errors on what states need to be allowed by your type.
@@ -99,6 +99,7 @@ defmodule AshStateMachineTest do
 
   defmodule ThreeStates do
     use Ash.Resource,
+      domain: AshStateMachineTest.Domain,
       data_layer: Ash.DataLayer.Ets,
       extensions: [AshStateMachine]
 
@@ -114,6 +115,7 @@ defmodule AshStateMachineTest do
     end
 
     actions do
+      default_accept :*
       defaults [:create]
 
       update :begin do
@@ -134,15 +136,14 @@ defmodule AshStateMachineTest do
     end
 
     code_interface do
-      define_for AshStateMachineTest.Api
       define :create
       define :begin
       define :complete
     end
   end
 
-  defmodule Api do
-    use Ash.Api
+  defmodule Domain do
+    use Ash.Domain
 
     resources do
       allow_unregistered? true
@@ -207,6 +208,7 @@ defmodule AshStateMachineTest do
     defmodule NextStateMachine do
       @moduledoc false
       use Ash.Resource,
+        domain: AshStateMachineTest.Domain,
         extensions: [AshStateMachine]
 
       state_machine do
@@ -225,12 +227,14 @@ defmodule AshStateMachineTest do
 
         attribute :state, :atom do
           allow_nil? false
+          public? true
           constraints one_of: [:a, :b, :c, :d]
           default :a
         end
       end
 
       actions do
+        default_accept :*
         defaults [:create]
 
         update :next do
@@ -239,7 +243,6 @@ defmodule AshStateMachineTest do
       end
 
       code_interface do
-        define_for Api
         define :create
         define :next
       end
@@ -266,14 +269,14 @@ defmodule AshStateMachineTest do
 
   describe "possible_next_states/1" do
     test "it correctly returns the next states" do
-      record = ThreeStates.create!(%{status: :complete})
+      record = ThreeStates.create!()
       assert [:executing, :pending] = AshStateMachine.possible_next_states(record)
     end
   end
 
   describe "possible_next_states/2" do
     test "it correctly returns the next states" do
-      record = ThreeStates.create!(%{status: :complete})
+      record = ThreeStates.create!()
       assert [:pending] = AshStateMachine.possible_next_states(record, :complete)
     end
   end

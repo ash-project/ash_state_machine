@@ -4,6 +4,8 @@ defmodule AshStateMachine.Transformers.AddState do
   use Spark.Dsl.Transformer
   alias Spark.Dsl.Transformer
 
+  def before?(Ash.Resource.Transformers.DefaultAccept), do: true
+  def before?(_), do: false
   def after?(_), do: true
 
   def transform(dsl_state) do
@@ -29,6 +31,7 @@ defmodule AshStateMachine.Transformers.AddState do
         Ash.Resource.Builder.add_attribute(dsl_state, attribute_name, :atom,
           default: default,
           allow_nil?: false,
+          public?: true,
           constraints: [
             one_of: all_states
           ]
