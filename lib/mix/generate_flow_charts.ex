@@ -83,14 +83,14 @@ defmodule Mix.Tasks.AshStateMachine.GenerateFlowCharts do
     end
   end
 
-  defp is_state_machine?(module) do
+  defp state_machine?(module) do
     Spark.Dsl.is?(module, Ash.Resource) and AshStateMachine in Spark.extensions(module)
   end
 
   defp state_machines do
     for module <- modules(),
         {:module, module} = Code.ensure_compiled(module),
-        is_state_machine?(module) do
+        state_machine?(module) do
       module
     end
   end

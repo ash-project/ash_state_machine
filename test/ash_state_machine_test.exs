@@ -66,7 +66,8 @@ defmodule AshStateMachineTest do
 
     changes do
       # any failures should be captured and transitioned to the error state
-      change after_transaction(fn changeset, {:ok, result}, _ ->
+      change after_transaction(fn
+               changeset, {:ok, result}, _ ->
                  {:ok, result}
 
                changeset, {:error, error}, _ ->

@@ -10,6 +10,5 @@ defmodule AshStateMachine.Errors.InvalidInitialState do
     """
     Attempted to set initial state to `:#{error.target}` in action `:#{error.action}`, but it is not a valid initial state.
     """
-
   end
 end
