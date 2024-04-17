@@ -151,28 +151,7 @@ defmodule AshStateMachine do
           Ash.Changeset.force_change_attribute(changeset, attribute, target)
       end
     else
-      Logger.error("""
-      Attempted to transition to an unknown state.
-
-      This usually means that one of the following is true:
-
-      * You have a missing transition definition in your state machine
-
-        To remediate this, add a transition.
-
-      * You are using `:*` to include a state that appears nowhere in the state machine definition
-
-        To remediate this, add the `extra_states` option and include the state #{inspect(target)}
-      """)
-
-      Ash.Changeset.add_error(
-        changeset,
-        AshStateMachine.Errors.NoMatchingTransition.exception(
-          old_state: old_state,
-          target: target,
-          action: changeset.action.name
-        )
-      )
+      no_such_state(changeset, target)
     end
   end
 
@@ -194,6 +173,32 @@ defmodule AshStateMachine do
 
   def transition_state(other, _target) do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
+  end
+
+  @doc false
+  def no_such_state(changeset, target, old_state \\ nil) do
+    Logger.error("""
+    Attempted to transition to an unknown state.
+
+    This usually means that one of the following is true:
+
+    * You have a missing transition definition in your state machine
+
+      To remediate this, add a transition.
+
+    * You are using `:*` to include a state that appears nowhere in the state machine definition
+
+      To remediate this, add the `extra_states` option and include the state #{inspect(target)}
+    """)
+
+    Ash.Changeset.add_error(
+      changeset,
+      AshStateMachine.Errors.NoMatchingTransition.exception(
+        old_state: old_state,
+        target: target,
+        action: changeset.action.name
+      )
+    )
   end
 
   @doc """
