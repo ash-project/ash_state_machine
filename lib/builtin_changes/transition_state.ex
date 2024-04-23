@@ -25,11 +25,7 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
               ^old_state in ^List.wrap(transition.from) and ^target in ^List.wrap(transition.to)
             )
 
-          if is_nil(expr) do
-            state_expr
-          else
-            expr(state_expr or ^expr)
-          end
+          expr(^state_expr or ^expr)
         end)
 
       new_state_value =

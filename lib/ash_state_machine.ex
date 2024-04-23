@@ -127,29 +127,11 @@ defmodule AshStateMachine do
   A utility to transition the state of a changeset, honoring the rules of the resource.
   """
   def transition_state(%{action_type: :update} = changeset, target) do
-    transitions =
-      AshStateMachine.Info.state_machine_transitions(changeset.resource, changeset.action.name)
-
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
     old_state = Map.get(changeset.data, attribute)
 
     if target in AshStateMachine.Info.state_machine_all_states(changeset.resource) do
-      case Enum.find(transitions, fn transition ->
-             old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
-           end) do
-        nil ->
-          Ash.Changeset.add_error(
-            changeset,
-            AshStateMachine.Errors.NoMatchingTransition.exception(
-              old_state: old_state,
-              target: target,
-              action: changeset.action.name
-            )
-          )
-
-        _transition ->
-          Ash.Changeset.force_change_attribute(changeset, attribute, target)
-      end
+      find_and_perform_transition(changeset, old_state, attribute, target)
     else
       no_such_state(changeset, target)
     end
@@ -173,6 +155,28 @@ defmodule AshStateMachine do
 
   def transition_state(other, _target) do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
+  end
+
+  defp find_and_perform_transition(changeset, old_state, attribute, target) do
+    changeset.resource
+    |> AshStateMachine.Info.state_machine_transitions(changeset.action.name)
+    |> Enum.find(fn transition ->
+      old_state in List.wrap(transition.from) and target in List.wrap(transition.to)
+    end)
+    |> case do
+      nil ->
+        Ash.Changeset.add_error(
+          changeset,
+          AshStateMachine.Errors.NoMatchingTransition.exception(
+            old_state: old_state,
+            target: target,
+            action: changeset.action.name
+          )
+        )
+
+      _transition ->
+        Ash.Changeset.force_change_attribute(changeset, attribute, target)
+    end
   end
 
   @doc false
