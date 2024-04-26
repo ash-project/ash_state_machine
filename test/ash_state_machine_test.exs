@@ -117,7 +117,7 @@ defmodule AshStateMachineTest do
 
     actions do
       default_accept :*
-      defaults [:create]
+      defaults [:read, :create]
 
       update :begin do
         change transition_state(:executing)
@@ -236,7 +236,7 @@ defmodule AshStateMachineTest do
 
       actions do
         default_accept :*
-        defaults [:create]
+        defaults [:read, :create]
 
         update :next do
           change next_state()
