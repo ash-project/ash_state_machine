@@ -9,6 +9,8 @@ config :spark, :formatter,
 if Mix.env() == :test do
   config :ash, :validate_domain_resource_inclusion?, false
   config :ash, :validate_domain_config_inclusion?, false
+  config :ash_state_machine, :ash_domains, [Domain]
+  config :logger, level: :warning
 end
 
 if Mix.env() == :dev do

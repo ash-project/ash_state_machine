@@ -5,14 +5,21 @@ defmodule AshStateMachine.Errors.NoMatchingTransition do
     class: :invalid
 
   def message(error) do
-    if error.old_state do
-      """
-      Attempted to change state from #{error.old_state} to #{error.target} in action #{error.action}, but no matching transition was configured.
-      """
-    else
-      """
-      Attempted to change state to #{error.target} in action #{error.action}, but no matching transition was configured.
-      """
+    cond do
+      error.old_state && error.target ->
+        """
+        Attempted to change state from #{error.old_state} to #{error.target} in action #{error.action}, but no matching transition was configured.
+        """
+
+      error.old_state ->
+        """
+        Attempted to change state from #{error.old_state} in action #{error.action}, but no matching transition was configured.
+        """
+
+      error.target ->
+        """
+        Attempted to change state to #{error.target} in action #{error.action}, but no matching transition was configured.
+        """
     end
   end
 end

@@ -143,8 +143,9 @@ defmodule AshStateMachine do
     if target in AshStateMachine.Info.state_machine_initial_states!(changeset.resource) do
       Ash.Changeset.force_change_attribute(changeset, attribute, target)
     else
-      Ash.Changeset.add_error(
-        changeset,
+      changeset
+      |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
+      |> Ash.Changeset.add_error(
         AshStateMachine.Errors.InvalidInitialState.exception(
           target: target,
           action: changeset.action.name
@@ -165,8 +166,9 @@ defmodule AshStateMachine do
     end)
     |> case do
       nil ->
-        Ash.Changeset.add_error(
-          changeset,
+        changeset
+        |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
+        |> Ash.Changeset.add_error(
           AshStateMachine.Errors.NoMatchingTransition.exception(
             old_state: old_state,
             target: target,
@@ -195,8 +197,9 @@ defmodule AshStateMachine do
       To remediate this, add the `extra_states` option and include the state #{inspect(target)}
     """)
 
-    Ash.Changeset.add_error(
-      changeset,
+    changeset
+    |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
+    |> Ash.Changeset.add_error(
       AshStateMachine.Errors.NoMatchingTransition.exception(
         old_state: old_state,
         target: target,
