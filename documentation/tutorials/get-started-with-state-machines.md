@@ -73,20 +73,25 @@ defmodule Order do
   changes do
     # any failures should be captured and transitioned to the error state
     change after_transaction(fn
-              changeset, {:ok, result}, _context ->
-                {:ok, result}
+             changeset, {:ok, result}, _ ->
+               {:ok, result}
 
-              changeset, {:error, error}, _context ->
-                message = Exception.message(error)
+             changeset, {:error, error}, _ ->
+               if changeset.context[:error_handler?] do
+                 {:error, error}
+               else
+                 changeset.data
+                 |> Ash.Changeset.for_update(:error, %{
+                   error_state: changeset.data.state
+                 })
+                 |> Ash.Changeset.set_context(%{error_handler?: true})
+                 |> Ash.update()
 
-                changeset.data
-                |> Ash.Changeset.for_update(:error, %{
-                  message: message,
-                  error_state: changeset.data.state
-                })
-                |> Ash.update()
-            end),
-            on: [:update]
+                 {:error, error}
+               end
+           end),
+           on: [:update]
+  end
   end
 
   attributes do

@@ -75,14 +75,18 @@ defmodule Order do
                {:ok, result}
 
              changeset, {:error, error}, _ ->
-               message = Exception.message(error)
+               if changeset.context[:error_handler?] do
+                 {:error, error}
+               else
+                 changeset.data
+                 |> Ash.Changeset.for_update(:error, %{
+                   error_state: changeset.data.state
+                 })
+                 |> Ash.Changeset.set_context(%{error_handler?: true})
+                 |> Ash.update()
 
-               changeset.data
-               |> Ash.Changeset.for_update(:error, %{
-                 message: message,
-                 error_state: changeset.data.state
-               })
-               |> Ash.update()
+                 {:error, error}
+               end
            end),
            on: [:update]
   end
