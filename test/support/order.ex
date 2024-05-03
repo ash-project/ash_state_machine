@@ -82,6 +82,7 @@ defmodule Order do
                  message: message,
                  error_state: changeset.data.state
                })
+               |> Ash.update()
            end),
            on: [:update]
   end
