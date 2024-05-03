@@ -119,7 +119,6 @@ defmodule AshStateMachine.MixProject do
   defp deps do
     [
       {:ash, ash_version("~> 3.0.0-rc and >= 3.0.0-rc.40")},
-      {:splode, path: "../splode", override: true},
       {:simple_sat, "~> 0.1", only: [:dev, :test], runtime: false},
       {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12", only: [:dev, :test]},
