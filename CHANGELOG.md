@@ -5,6 +5,19 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.3-rc.1](https://github.com/ash-project/ash_state_machine/compare/v0.2.3-rc.0...v0.2.3-rc.1) (2024-05-04)
+
+
+
+
+### Improvements:
+
+* policy for including state machine in `can?` checks
+
+* optimize atomic state transition check
+
+* add atomic implementation
+
 ## [v0.2.3-rc.0](https://github.com/ash-project/ash_state_machine/compare/v0.2.2...v0.2.3-rc.0) (2024-03-29)
 
 
