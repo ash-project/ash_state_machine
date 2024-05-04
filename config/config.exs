@@ -25,7 +25,7 @@ if Mix.env() == :dev do
     # Pass in `true` to use `"README.md"` or a string to customize
     manage_readme_version: [
       "README.md",
-      "documentation/tutorials/get-started-with-state-machines.md"
+      "documentation/tutorials/getting-started-with-ash-state-machine.md"
     ],
     version_tag_prefix: "v"
 end
