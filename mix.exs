@@ -4,7 +4,7 @@ defmodule AshStateMachine.MixProject do
   @version "0.2.3-rc.0"
 
   @description """
-  An Ash.Resource extension for building finite state machines
+  The extension for building state machines with Ash resources.
   """
 
   def project do
@@ -47,7 +47,7 @@ defmodule AshStateMachine.MixProject do
 
   defp docs do
     [
-      main: "get-started-with-state-machines",
+      main: "readme",
       source_ref: "v#{@version}",
       logo: "logos/small-logo.png",
       extra_section: "GUIDES",
@@ -77,7 +77,8 @@ defmodule AshStateMachine.MixProject do
           ""
       end,
       extras: [
-        "documentation/tutorials/get-started-with-state-machines.md",
+        {"README.md", title: "Home"},
+        "documentation/tutorials/getting-started-with-ash-state-machine.md",
         "documentation/dsls/DSL:-AshStateMachine.md"
       ],
       groups_for_extras: [

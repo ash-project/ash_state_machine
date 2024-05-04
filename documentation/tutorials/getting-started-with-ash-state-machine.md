@@ -7,12 +7,7 @@ If you haven't already, read the [Ash Getting Started Guide](https://hexdocs.pm/
 ## Bring in the ash_state_machine dependency
 
 ```elixir
-def deps()
-  [
-    ...
-    {:ash_state_machine, "~> 0.2.3-rc.0"}
-  ]
-end
+{:ash_state_machine, "~> 0.2.3-rc.0"}
 ```
 
 ## Making a resource into a state machine
