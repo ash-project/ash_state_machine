@@ -79,6 +79,9 @@ defmodule AshStateMachine.MixProject do
       extras: [
         {"README.md", title: "Home"},
         "documentation/tutorials/getting-started-with-ash-state-machine.md",
+        "documentation/topics/what-is-ash-state-machine.md",
+        "documentation/topics/charts.md",
+        "documentation/topics/working-with-ash-can.md",
         "documentation/dsls/DSL:-AshStateMachine.md"
       ],
       groups_for_extras: [

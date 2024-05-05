@@ -14,6 +14,12 @@ Welcome! This is the extension for building state machines with [Ash](https://he
 
 - [Getting Started with AshStateMachine](documentation/tutorials/getting-started-with-ash-state-machine.md)
 
+## Topics
+
+- [What is AshStateMachine?](documentation/topics/what-is-ash-state-machine.md)
+- [Charts](documentation/topics/charts.md)
+- [Working with `Ash.can?`](documentation/topics/working-with-ash-can.md)
+
 ## Reference
 
 - [AshStateMachine DSL](documentation/dsls/DSL:-AshStateMachine.md)
