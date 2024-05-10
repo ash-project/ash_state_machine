@@ -5,6 +5,11 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.3](https://github.com/ash-project/ash_state_machine/compare/v0.2.3-rc.1...v0.2.3) (2024-05-10)
+
+
+
+
 ## [v0.2.3-rc.1](https://github.com/ash-project/ash_state_machine/compare/v0.2.3-rc.0...v0.2.3-rc.1) (2024-05-04)
 
 

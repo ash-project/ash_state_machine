@@ -1,7 +1,7 @@
 defmodule AshStateMachine.MixProject do
   use Mix.Project
 
-  @version "0.2.3-rc.1"
+  @version "0.2.3"
 
   @description """
   The extension for building state machines with Ash resources.
@@ -126,7 +126,7 @@ defmodule AshStateMachine.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ash, ash_version("~> 3.0.0-rc and >= 3.0.0-rc.40")},
+      {:ash, ash_version("~> 3.0")},
       {:simple_sat, "~> 0.1", only: [:dev, :test], runtime: false},
       {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12", only: [:dev, :test]},
