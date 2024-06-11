@@ -31,6 +31,10 @@ defmodule Order do
     # create sets the st
     defaults [:create, :read]
 
+    create :create_with_state do
+      accept [:state]
+    end
+
     update :confirm do
       # accept [...] you can change other attributes
       # or do anything else an action can normally do

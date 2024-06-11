@@ -6,6 +6,8 @@ defmodule AshStateMachine.Transformers.AddState do
 
   def before?(Ash.Resource.Transformers.DefaultAccept), do: true
   def before?(_), do: false
+
+  def after?(Ash.Resource.Transformers.DefaultAccept), do: false
   def after?(_), do: true
 
   def transform(dsl_state) do
