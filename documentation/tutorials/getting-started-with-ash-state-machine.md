@@ -26,8 +26,8 @@ use Ash.Resource,
 ...
 
 state_machine do
-  inital_states [:pending]
-  default_inital_state :pending
+  initial_states [:pending]
+  default_initial_state :pending
 end
 ```
 
@@ -35,8 +35,8 @@ end
 
 ```elixir
 state_machine do
-  inital_states [:pending]
-  default_inital_state :pending
+  initial_states [:pending]
+  default_initial_state :pending
 
   transitions do
     # `:begin` action can move state from `:pending` to `:started`/`:aborted`
