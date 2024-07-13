@@ -126,7 +126,7 @@ defmodule AshStateMachine.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ash, ash_version("~> 3.0")},
+      {:ash, ash_version("~> 3.0 and >= 3.1.4")},
       {:simple_sat, "~> 0.1", only: [:dev, :test], runtime: false},
       {:ex_doc, github: "elixir-lang/ex_doc", only: [:dev, :test], runtime: false},
       {:ex_check, "~> 0.12", only: [:dev, :test]},
