@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.5](https://github.com/ash-project/ash_state_machine/compare/v0.2.4...v0.2.5) (2024-07-13)
+
+
+
+
+### Improvements:
+
+* simplify atomic state transition with new ash feature
+
 ## [v0.2.4](https://github.com/ash-project/ash_state_machine/compare/v0.2.3...v0.2.4) (2024-06-17)
 
 
