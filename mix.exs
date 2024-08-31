@@ -1,7 +1,7 @@
 defmodule AshStateMachine.MixProject do
   use Mix.Project
 
-  @version "0.2.5"
+  @version "0.2.6"
 
   @description """
   The extension for building state machines with Ash resources.
