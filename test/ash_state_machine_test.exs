@@ -28,7 +28,7 @@ defmodule AshStateMachineTest do
 
     test "`from: :*` can transition from any state" do
       for state <- [:pending, :confirmed, :on_its_way, :arrived, :error] do
-        assert {:ok, machine} = Order.abort!(%Order{state: state})
+        assert {:ok, machine} = Order.abort(%Order{state: state})
         assert machine.state == :aborted
       end
     end
