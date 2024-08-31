@@ -20,9 +20,9 @@ defmodule AshStateMachine.Checks.ValidNextState do
         Ash.Changeset.get_attribute(changeset, attribute) ||
           AshStateMachine.Info.state_machine_default_initial_state!(changeset.resource)
 
-      {:ok, new_state in AshStateMachine.Info.state_machine_initial_states!(changeset.resource)}
+      new_state in AshStateMachine.Info.state_machine_initial_states!(changeset.resource)
     else
-      {:ok, true}
+      true
     end
   end
 
@@ -44,7 +44,7 @@ defmodule AshStateMachine.Checks.ValidNextState do
       all_states = AshStateMachine.Info.state_machine_all_states(changeset.resource)
 
       if not is_nil(target) && !Ash.Expr.expr?(target) && target not in all_states do
-        {:ok, false}
+        false
       else
         states_expr =
           Enum.reduce(transitions, nil, fn transition, expr ->
@@ -60,7 +60,7 @@ defmodule AshStateMachine.Checks.ValidNextState do
       end
     else
       # state transitions are checked in validations when using `transition_state`
-      {:ok, true}
+      true
     end
   end
 end
