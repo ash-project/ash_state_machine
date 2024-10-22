@@ -81,6 +81,47 @@ actions do
 end
 ```
 
+## Declaring a custom state attribute
+
+By default, a `:state` attribute is created on the resource that looks like this:
+
+```elixir
+attribute :state, :atom do
+  allow_nil? false
+  default AshStateMachine.Info.state_machine_initial_default_state(dsl_state)
+  public? true
+  constraints one_of: [
+    AshStateMachine.Info.state_machine_all_states(dsl_state)
+  ]
+end
+```
+
+You can change the name of this attribute, without declaring an attribute yourself, like so:
+
+```elixir
+state_machine do
+  initial_states([:pending])
+  default_initial_state(:pending)
+  state_attribute(:alternative_state) # <-- save state in an attribute named :alternative_state
+end
+```
+
+If you need more control, you can declare the attribute yourself on the resource:
+
+```elixir
+attributes do
+  attribute :alternative_state, :atom do
+    allow_nil? false
+    default :issued
+    public? true
+    constraints one_of: [:issued, :sold, :reserved, :retired]
+  end
+end
+```
+
+Be aware that the type of this attribute needs to be `:atom` or a type created with `Ash.Type.Enum`. Both the `default` and list of values need to be correct! 
+
+
 ## Making a resource into a state machine
 
 The concept of a state machine (in this case a "Finite State Machine"), essentially involves a single `state`, with specified transitions between states. For example, you might have an order state machine with states `[:pending, :on_its_way, :delivered]`. However, you can't go from `:pending` to `:delivered` (probably), and so you want to only allow certain transitions in certain circumstances, i.e `:pending -> :on_its_way -> :delivered`.
