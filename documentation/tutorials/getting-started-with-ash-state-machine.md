@@ -119,7 +119,7 @@ attributes do
 end
 ```
 
-Be aware that the type of this attribute needs to be `:atom` and the `default` and `constraints[:one_of]` options need to be correct!
+Be aware that the type of this attribute needs to be `:atom` or a type created with `Ash.Type.Enum`. Both the `default` and list of values need to be correct! 
 
 
 ## Making a resource into a state machine
