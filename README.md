@@ -22,4 +22,4 @@ Welcome! This is the extension for building state machines with [Ash](https://he
 
 ## Reference
 
-- [AshStateMachine DSL](documentation/dsls/DSL:-AshStateMachine.md)
+- [AshStateMachine DSL](documentation/dsls/DSL-AshStateMachine.md)

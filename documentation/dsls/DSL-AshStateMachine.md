@@ -24,7 +24,7 @@ Provides tools for defining and working with resource-backed state machines.
 | [`initial_states`](#state_machine-initial_states){: #state_machine-initial_states .spark-required} | `list(atom)` |  | The allowed starting states of this state machine. |
 | [`deprecated_states`](#state_machine-deprecated_states){: #state_machine-deprecated_states } | `list(atom)` | `[]` | A list of states that have been deprecated but are still valid. These will still be in the possible list of states, but `:*` will not include them. |
 | [`extra_states`](#state_machine-extra_states){: #state_machine-extra_states } | `list(atom)` | `[]` | A list of states that may be used by transitions to/from `:*`. See the docs on wildcards for more. |
-| [`state_attribute`](#state_machine-state_attribute){: #state_machine-state_attribute } | `atom` | `:state` | The attribute to store the state in. You don't have to declare an attribute yourself, but it is possible. See the tutorial for more information. |
+| [`state_attribute`](#state_machine-state_attribute){: #state_machine-state_attribute } | `atom` | `:state` | The attribute to store the state in. |
 | [`default_initial_state`](#state_machine-default_initial_state){: #state_machine-default_initial_state } | `atom` |  | The default initial state |
 
 

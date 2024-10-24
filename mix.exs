@@ -82,7 +82,7 @@ defmodule AshStateMachine.MixProject do
         "documentation/topics/what-is-ash-state-machine.md",
         "documentation/topics/charts.md",
         "documentation/topics/working-with-ash-can.md",
-        "documentation/dsls/DSL:-AshStateMachine.md",
+        "documentation/dsls/DSL-AshStateMachine.md",
         "CHANGELOG.md"
       ],
       groups_for_extras: [
