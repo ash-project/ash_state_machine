@@ -11,8 +11,9 @@ defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
     end)
     |> Enum.each(fn transition ->
       action = Ash.Resource.Info.action(dsl_state, transition.action)
+      all_states = dsl_state |> AshStateMachine.Info.state_machine_all_states()
 
-      case validate(action) do
+      case validate(action, transition, all_states) do
         :ok ->
           :ok
 
@@ -29,15 +30,18 @@ defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
     :ok
   end
 
-  defp validate(action) do
-    case action do
-      %{type: :update} -> :ok
-      %{type: :create, upsert?: true} -> :ok
-      %{type: :create, upsert?: false} -> {:error, :create_must_upsert}
-      nil -> {:error, :no_such_action}
-      _ -> {:error, :no_such_action}
+  defp validate(nil, _, _), do: {:error, :no_such_action}
+  defp validate(%{type: :update}, _, _), do: :ok
+  defp validate(%{type: :create, upsert?: false}, _, _), do: {:error, :create_must_upsert}
+
+  defp validate(%{type: :create}, %{from: from}, all_states) do
+    case Enum.sort(from) == Enum.sort(all_states) do
+      true -> :ok
+      false -> {:error, :create_must_allow_from_all}
     end
   end
+
+  defp validate(_, _, _), do: {:error, :no_such_action}
 
   defp error_message(err, action) do
     case err do
@@ -46,6 +50,9 @@ defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
 
       :create_must_upsert ->
         "Transition configured with non-upsert create action `:#{action}`. Create actions must be configured with `upsert? true` to allow state transitions."
+
+      :create_must_allow_from_all ->
+        "Transition configured with create action `:#{action}` must allow transitions from all states."
     end
   end
 end
