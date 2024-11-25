@@ -137,25 +137,43 @@ defmodule AshStateMachine do
     end
   end
 
+  def transition_state(%{action_type: :create, action: %{upsert?: true}} = changeset, target) do
+    attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
+    old_state = Map.get(changeset.data, attribute)
+
+    cond do
+      target not in AshStateMachine.Info.state_machine_initial_states!(changeset.resource) ->
+        invalid_initial_state(changeset, target)
+
+      target not in available_upsert_targets(changeset) -> no_matching_transition(changeset, target, old_state)
+
+      true -> Ash.Changeset.force_change_attribute(changeset, attribute, target)
+    end
+  end
+
   def transition_state(%{action_type: :create} = changeset, target) do
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
 
     if target in AshStateMachine.Info.state_machine_initial_states!(changeset.resource) do
       Ash.Changeset.force_change_attribute(changeset, attribute, target)
     else
-      changeset
-      |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
-      |> Ash.Changeset.add_error(
-        AshStateMachine.Errors.InvalidInitialState.exception(
-          target: target,
-          action: changeset.action.name
-        )
-      )
+      invalid_initial_state(changeset, target)
     end
   end
 
   def transition_state(other, _target) do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
+  end
+
+  defp invalid_initial_state(changeset, target) do
+    changeset
+    |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
+    |> Ash.Changeset.add_error(
+      AshStateMachine.Errors.InvalidInitialState.exception(
+        target: target,
+        action: changeset.action.name
+      )
+    )
   end
 
   defp find_and_perform_transition(changeset, old_state, attribute, target) do
@@ -166,15 +184,7 @@ defmodule AshStateMachine do
     end)
     |> case do
       nil ->
-        changeset
-        |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
-        |> Ash.Changeset.add_error(
-          AshStateMachine.Errors.NoMatchingTransition.exception(
-            old_state: old_state,
-            target: target,
-            action: changeset.action.name
-          )
-        )
+         no_matching_transition(changeset, target, old_state)
 
       _transition ->
         Ash.Changeset.force_change_attribute(changeset, attribute, target)
@@ -197,6 +207,11 @@ defmodule AshStateMachine do
       To remediate this, add the `extra_states` option and include the state #{inspect(target)}
     """)
 
+     no_matching_transition(changeset, target, old_state)
+  end
+
+  @doc false
+  defp no_matching_transition(changeset, target, old_state) do
     changeset
     |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
     |> Ash.Changeset.add_error(
@@ -241,6 +256,13 @@ defmodule AshStateMachine do
     |> Enum.filter(&(current_state in &1.from or :* in &1.from))
     |> Enum.flat_map(& &1.to)
     |> Enum.reject(&(&1 == :*))
+    |> Enum.uniq()
+  end
+
+  defp available_upsert_targets(changeset) do
+    AshStateMachine.Info.state_machine_transitions(changeset.resource, changeset.action.name)
+    |> Enum.map(& &1.to)
+    |> List.flatten()
     |> Enum.uniq()
   end
 end

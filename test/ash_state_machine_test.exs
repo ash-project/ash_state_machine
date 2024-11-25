@@ -50,6 +50,12 @@ defmodule AshStateMachineTest do
       assert Verification.reset!(%{id: state_machine.id}).state == :pending
     end
 
+    test "create upsert? actions do not allow invalid states" do
+      state_machine = Verification.create!() |> Verification.begin!()
+      assert {:error, reason} = Verification.broken_upsert(%{id: state_machine.id})
+      assert Exception.message(reason) =~ ~r/no matching transition/i
+    end
+
     test "create actions without `upsert? true` do not compile" do
       assert_raise Spark.Error.DslError, ~r/non-upsert create action/, fn ->
         defmodule CreateWithoutUpsert do

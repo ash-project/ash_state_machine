@@ -11,6 +11,7 @@ defmodule Verification do
     transitions do
       transition(:begin, from: :pending, to: :executing)
       transition(:reset, from: :*, to: :pending)
+      transition(:broken_upsert, from: :*, to: [:foo, :bar])
     end
   end
 
@@ -26,6 +27,11 @@ defmodule Verification do
       upsert? true
       change transition_state(:pending)
     end
+
+    create :broken_upsert do
+      upsert? true
+      change transition_state(:pending)
+    end
   end
 
   attributes do
@@ -36,5 +42,6 @@ defmodule Verification do
     define :create
     define :begin
     define :reset
+    define :broken_upsert
   end
 end
