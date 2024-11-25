@@ -35,13 +35,14 @@ defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
       %{type: :create, upsert?: true} -> :ok
       %{type: :create, upsert?: false} -> {:error, :create_must_upsert}
       nil -> {:error, :no_such_action}
+      _ -> {:error, :no_such_action}
     end
   end
 
   defp error_message(err, action) do
     case err do
       :no_such_action ->
-        "Transition configured with action `:#{action}` but no such action is defined. Actions must be of type update or create with `upsert?: true`"
+        "Transition configured with action `:#{action}` but no such create or update action is defined. Actions must be of type update or create with `upsert?: true`"
 
       :create_must_upsert ->
         "Transition configured with non-upsert create action `:#{action}`. Create actions must be configured with `upsert? true` to allow state transitions."

@@ -73,6 +73,30 @@ defmodule AshStateMachineTest do
         end
       end
     end
+
+    test "any action other than update or create with upsert? true does not compile" do
+           assert_raise Spark.Error.DslError, ~r/no such create or update action/, fn ->
+        defmodule DeleteAction do
+          use Ash.Resource,
+            domain: nil,
+            extensions: [AshStateMachine]
+
+          state_machine do
+            initial_states [:pending]
+
+            transitions do
+              transition :delete, from: :*, to: :pending
+            end
+          end
+
+          actions do
+            destroy :delete do
+              change transition_state(:pending)
+            end
+          end
+        end
+      end
+    end
   end
 
   describe "charts" do
