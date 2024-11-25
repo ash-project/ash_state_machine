@@ -44,6 +44,35 @@ defmodule AshStateMachineTest do
         assert Exception.message(reason) =~ ~r/no matching transition/i
       end
     end
+
+    test "create actions are allowed with `upsert? true`" do
+      state_machine = Verification.create!() |> Verification.begin!()
+      assert Verification.reset!(%{id: state_machine.id}).state == :pending
+    end
+
+    test "create actions without `upsert? true` do not compile" do
+      assert_raise Spark.Error.DslError, ~r/non-upsert create action/, fn ->
+        defmodule CreateWithoutUpsert do
+          use Ash.Resource,
+            domain: nil,
+            extensions: [AshStateMachine]
+
+          state_machine do
+            initial_states [:pending]
+
+            transitions do
+              transition :reset, from: :*, to: :pending
+            end
+          end
+
+          actions do
+            create :reset do
+              change transition_state(:pending)
+            end
+          end
+        end
+      end
+    end
   end
 
   describe "charts" do

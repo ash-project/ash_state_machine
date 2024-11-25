@@ -6,5 +6,6 @@ defmodule Domain do
     resource ThreeStates
     resource Order
     resource NextStateMachine
+    resource Verification
   end
 end

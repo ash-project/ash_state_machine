@@ -1,0 +1,40 @@
+defmodule Verification do
+  use Ash.Resource,
+    domain: Domain,
+    data_layer: Ash.DataLayer.Ets,
+    extensions: [AshStateMachine]
+
+  state_machine do
+    initial_states [:pending]
+    default_initial_state :pending
+
+    transitions do
+      transition(:begin, from: :pending, to: :executing)
+      transition(:reset, from: :*, to: :pending)
+    end
+  end
+
+  actions do
+    default_accept :*
+    defaults [:read, :create]
+
+    update :begin do
+      change transition_state(:executing)
+    end
+
+    create :reset do
+      upsert? true
+      change transition_state(:pending)
+    end
+  end
+
+  attributes do
+    uuid_primary_key :id, writable?: true
+  end
+
+  code_interface do
+    define :create
+    define :begin
+    define :reset
+  end
+end

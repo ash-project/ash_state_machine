@@ -21,7 +21,8 @@ defmodule AshStateMachine.MixProject do
       docs: docs(),
       description: @description,
       source_url: "https://github.com/ash-project/ash_state_machine",
-      homepage_url: "https://github.com/ash-project/ash_state_machine"
+      homepage_url: "https://github.com/ash-project/ash_state_machine",
+      consolidate_protocols: Mix.env() != :test
     ]
   end
 
