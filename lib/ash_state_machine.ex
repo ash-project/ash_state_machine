@@ -165,17 +165,6 @@ defmodule AshStateMachine do
     Ash.Changeset.add_error(other, "Can't transition states on destroy actions")
   end
 
-  defp invalid_initial_state(changeset, target) do
-    changeset
-    |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
-    |> Ash.Changeset.add_error(
-      AshStateMachine.Errors.InvalidInitialState.exception(
-        target: target,
-        action: changeset.action.name
-      )
-    )
-  end
-
   defp find_and_perform_transition(changeset, old_state, attribute, target) do
     changeset.resource
     |> AshStateMachine.Info.state_machine_transitions(changeset.action.name)
@@ -217,6 +206,17 @@ defmodule AshStateMachine do
     |> Ash.Changeset.add_error(
       AshStateMachine.Errors.NoMatchingTransition.exception(
         old_state: old_state,
+        target: target,
+        action: changeset.action.name
+      )
+    )
+  end
+
+  defp invalid_initial_state(changeset, target) do
+    changeset
+    |> Ash.Changeset.set_context(%{state_machine: %{attempted_change: target}})
+    |> Ash.Changeset.add_error(
+      AshStateMachine.Errors.InvalidInitialState.exception(
         target: target,
         action: changeset.action.name
       )
