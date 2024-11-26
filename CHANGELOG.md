@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.7](https://github.com/ash-project/ash_state_machine/compare/v0.2.6...v0.2.7) (2024-11-26)
+
+
+
+
+### Improvements:
+
+* Allow create upsert actions in state transitions (#71)
+
 ## [v0.2.6](https://github.com/ash-project/ash_state_machine/compare/v0.2.5...v0.2.6) (2024-08-31)
 
 
