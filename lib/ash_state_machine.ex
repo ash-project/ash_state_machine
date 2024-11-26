@@ -145,9 +145,11 @@ defmodule AshStateMachine do
       target not in AshStateMachine.Info.state_machine_initial_states!(changeset.resource) ->
         invalid_initial_state(changeset, target)
 
-      target not in available_upsert_targets(changeset) -> no_matching_transition(changeset, target, old_state)
+      target not in available_upsert_targets(changeset) ->
+        no_matching_transition(changeset, target, old_state)
 
-      true -> Ash.Changeset.force_change_attribute(changeset, attribute, target)
+      true ->
+        Ash.Changeset.force_change_attribute(changeset, attribute, target)
     end
   end
 
@@ -173,7 +175,7 @@ defmodule AshStateMachine do
     end)
     |> case do
       nil ->
-         no_matching_transition(changeset, target, old_state)
+        no_matching_transition(changeset, target, old_state)
 
       _transition ->
         Ash.Changeset.force_change_attribute(changeset, attribute, target)
@@ -196,7 +198,7 @@ defmodule AshStateMachine do
       To remediate this, add the `extra_states` option and include the state #{inspect(target)}
     """)
 
-     no_matching_transition(changeset, target, old_state)
+    no_matching_transition(changeset, target, old_state)
   end
 
   @doc false
