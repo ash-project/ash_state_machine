@@ -1,4 +1,5 @@
 defmodule Verification do
+  @moduledoc false
   use Ash.Resource,
     domain: Domain,
     data_layer: Ash.DataLayer.Ets,
