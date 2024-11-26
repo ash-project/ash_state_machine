@@ -16,9 +16,9 @@ defmodule AshStateMachine.Errors.NoMatchingTransition do
         Attempted to change state from #{error.old_state} in action #{error.action}, but no matching transition was configured.
         """
 
-      error.target ->
+      true ->
         """
-        Attempted to change state to #{error.target} in action #{error.action}, but no matching transition was configured.
+        Attempted to change state to #{inspect(error.target)} in action #{error.action}, but no matching transition was configured.
         """
     end
   end
