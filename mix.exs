@@ -128,6 +128,7 @@ defmodule AshStateMachine.MixProject do
   defp deps do
     [
       {:ash, ash_version("~> 3.0 and >= 3.1.4")},
+      {:igniter, "~> 0.5", only: [:dev, :test]},
       {:simple_sat, "~> 0.1", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.36", only: [:dev, :test]},
       {:ex_check, "~> 0.12", only: [:dev, :test]},
