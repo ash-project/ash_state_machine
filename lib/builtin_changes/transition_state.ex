@@ -13,7 +13,7 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
 
     old_state = expr(^ref(attribute))
-    target = opts[:target]
+    target = maybe_cast_to_atom(opts[:target])
     all_states = AshStateMachine.Info.state_machine_all_states(changeset.resource)
 
     if !Ash.Expr.expr?(target) && target not in all_states do
@@ -52,4 +52,12 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
        ]}
     end
   end
+
+  def maybe_cast_to_atom(target) when is_binary(target) do
+    String.to_existing_atom(target)
+  rescue
+    _ -> target
+  end
+
+  def maybe_cast_to_atom(target), do: target
 end
