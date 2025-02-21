@@ -126,6 +126,13 @@ defmodule AshStateMachine do
   @doc """
   A utility to transition the state of a changeset, honoring the rules of the resource.
   """
+  def transition_state(changeset, target) when is_binary(target) do
+    transition_state(changeset, String.to_existing_atom(target))
+  rescue
+    _ ->
+      no_such_state(changeset, target)
+  end
+
   def transition_state(%{action_type: :update} = changeset, target) do
     attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
     old_state = Map.get(changeset.data, attribute)

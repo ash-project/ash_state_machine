@@ -73,7 +73,7 @@ defmodule AshStateMachineTest do
 
           actions do
             create :reset do
-              change transition_state(:pending)
+              change transition_state("pending")
             end
           end
         end
