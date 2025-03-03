@@ -1,7 +1,7 @@
 defmodule AshStateMachine.MixProject do
   use Mix.Project
 
-  @version "0.2.8"
+  @version "0.2.7"
 
   @description """
   The extension for building state machines with Ash resources.
@@ -18,7 +18,7 @@ defmodule AshStateMachine.MixProject do
       deps: deps(),
       elixirc_paths: elixirc_paths(Mix.env()),
       dialyzer: [plt_add_apps: [:ash, :mix]],
-      docs: docs(),
+      docs: &docs/0,
       description: @description,
       source_url: "https://github.com/ash-project/ash_state_machine",
       homepage_url: "https://github.com/ash-project/ash_state_machine",
@@ -83,7 +83,8 @@ defmodule AshStateMachine.MixProject do
         "documentation/topics/what-is-ash-state-machine.md",
         "documentation/topics/charts.md",
         "documentation/topics/working-with-ash-can.md",
-        "documentation/dsls/DSL-AshStateMachine.md",
+        {"documentation/dsls/DSL-AshStateMachine.md",
+         search_data: Spark.Docs.search_data_for(AshStateMachine)},
         "CHANGELOG.md"
       ],
       groups_for_extras: [
@@ -147,8 +148,7 @@ defmodule AshStateMachine.MixProject do
       docs: [
         "spark.cheat_sheets",
         "docs",
-        "spark.replace_doc_links",
-        "spark.cheat_sheets_in_search"
+        "spark.replace_doc_links"
       ],
       "spark.formatter": "spark.formatter --extensions AshStateMachine",
       "spark.cheat_sheets": "spark.cheat_sheets --extensions AshStateMachine",
