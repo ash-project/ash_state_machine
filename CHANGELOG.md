@@ -5,6 +5,23 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.8](https://github.com/ash-project/ash_state_machine/compare/v0.2.7...v0.2.8) (2025-03-03)
+
+
+
+
+### Bug Fixes:
+
+* Add String.to_existing_atom casting to builtin change (#89)
+
+* support transitioning state to a string
+
+* handle `nil` target state in `no_matching_event` error
+
+### Improvements:
+
+* upgrade ash for atomic condition fixes
+
 ## [v0.2.7](https://github.com/ash-project/ash_state_machine/compare/v0.2.6...v0.2.7) (2024-11-26)
 
 ### Improvements:
