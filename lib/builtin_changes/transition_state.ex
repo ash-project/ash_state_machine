@@ -46,7 +46,7 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
            )
          )}
 
-      {:atomic, changeset, %{attribute => opts[:target]},
+      {:atomic, %{attribute => opts[:target]},
        [
          has_matching_transition
        ]}
