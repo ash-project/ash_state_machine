@@ -5,9 +5,11 @@ defmodule AshStateMachine.Transformers.AddState do
   alias Spark.Dsl.Transformer
 
   def before?(Ash.Resource.Transformers.DefaultAccept), do: true
+  def before?(AshStateMachine.Transformers.SetDefaultInitialState), do: false
   def before?(_), do: false
 
   def after?(Ash.Resource.Transformers.DefaultAccept), do: false
+  def after?(AshStateMachine.Transformers.SetDefaultInitialState), do: true
   def after?(_), do: true
 
   def transform(dsl_state) do
