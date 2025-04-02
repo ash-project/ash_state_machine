@@ -7,8 +7,8 @@ defmodule AshStateMachine.Transformers.AddState do
   def before?(Ash.Resource.Transformers.DefaultAccept), do: true
   def before?(_), do: false
 
-  def after?(AshStateMachine.Transformers.SetDefaultInitialState), do: true
-  def after?(_), do: false
+  def after?(Ash.Resource.Transformers.DefaultAccept), do: false
+  def after?(_), do: true
 
   def transform(dsl_state) do
     deprecated_states = AshStateMachine.Info.state_machine_deprecated_states!(dsl_state)
