@@ -21,21 +21,23 @@ defmodule AshStateMachine.Transformers.AddState do
 
     case Ash.Resource.Info.attribute(dsl_state, attribute_name) do
       nil ->
-        case AshStateMachine.Info.state_machine_default_initial_state(dsl_state) do
-          {:ok, default} ->
-            Ash.Resource.Builder.add_attribute(dsl_state, attribute_name, :atom,
-              default: default,
-              allow_nil?: false,
-              public?: true,
-              constraints: [
-                one_of: all_states
-              ]
-            )
+        default =
+          case AshStateMachine.Info.state_machine_default_initial_state(dsl_state) do
+            {:ok, value} ->
+              value
 
-          _ ->
-            {:error,
-             "default_initial_state must be set for AshStateMachine to be able to add the #{attribute_name} attribute"}
-        end
+            _ ->
+              nil
+          end
+
+        Ash.Resource.Builder.add_attribute(dsl_state, attribute_name, :atom,
+          default: default,
+          allow_nil?: false,
+          public?: true,
+          constraints: [
+            one_of: all_states
+          ]
+        )
 
       attribute ->
         if attribute.allow_nil? do
