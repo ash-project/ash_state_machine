@@ -111,6 +111,7 @@ defmodule AshStateMachine do
   use Spark.Dsl.Extension,
     sections: @sections,
     transformers: [
+      AshStateMachine.Transformers.SetDefaultInitialState,
       AshStateMachine.Transformers.FillInTransitionDefaults,
       AshStateMachine.Transformers.AddState,
       AshStateMachine.Transformers.EnsureStateSelected
