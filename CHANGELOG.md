@@ -5,6 +5,17 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.9](https://github.com/ash-project/ash_state_machine/compare/v0.2.8...v0.2.9) (2025-04-09)
+
+
+
+
+### Improvements:
+
+* set the default_initial_state from initial_states if possible (#101)
+
+* add igniter installer (#100)
+
 ## [v0.2.8](https://github.com/ash-project/ash_state_machine/compare/v0.2.7...v0.2.8) (2025-03-03)
 
 
