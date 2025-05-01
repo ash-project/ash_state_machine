@@ -25,6 +25,7 @@ defmodule ThreeStates do
     end
 
     update :complete do
+      change transition_state(:executing), where: attribute_equals(:state, :random)
       change transition_state(:complete)
     end
   end

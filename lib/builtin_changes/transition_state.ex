@@ -17,7 +17,17 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
     all_states = AshStateMachine.Info.state_machine_all_states(changeset.resource)
 
     if !Ash.Expr.expr?(target) && target not in all_states do
-      {:atomic, AshStateMachine.no_such_state(changeset, target), %{}}
+      AshStateMachine.no_such_state(changeset, target)
+      {:atomic, %{attribute => expr(
+        error(
+          AshStateMachine.Errors.NoMatchingTransition,
+          %{
+            old_state: ^old_state,
+            target: ^target,
+            action: ^changeset.action.name
+          }
+        )
+      )}}
     else
       states_expr =
         Enum.reduce(transitions, nil, fn transition, expr ->
