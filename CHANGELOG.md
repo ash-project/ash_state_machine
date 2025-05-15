@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.11](https://github.com/ash-project/ash_state_machine/compare/v0.2.10...v0.2.11) (2025-05-15)
+
+
+
+
+### Bug Fixes:
+
+* use atomic error instead of modifying changeset for no such state
+
 ## [v0.2.10](https://github.com/ash-project/ash_state_machine/compare/v0.2.9...v0.2.10) (2025-05-01)
 
 
