@@ -7,7 +7,7 @@ If you haven't already, read the [Ash Getting Started Guide](https://hexdocs.pm/
 ## Bring in the ash_state_machine dependency
 
 ```elixir
-{:ash_state_machine, "~> 0.2.11"}
+{:ash_state_machine, "~> 0.2.12"}
 ```
 
 ## Add the extension to your resource
