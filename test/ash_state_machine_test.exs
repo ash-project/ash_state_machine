@@ -1,6 +1,7 @@
 defmodule AshStateMachineTest do
   use ExUnit.Case
   doctest AshStateMachine
+  import ExUnit.CaptureIO
 
   describe "transformers" do
     test "infers all states, excluding star (:*)" do
@@ -57,76 +58,85 @@ defmodule AshStateMachineTest do
     end
 
     test "create actions without `upsert? true` do not compile" do
-      assert_raise Spark.Error.DslError, ~r/non-upsert create action/, fn ->
-        defmodule CreateWithoutUpsert do
-          use Ash.Resource,
-            domain: nil,
-            extensions: [AshStateMachine]
+      result =
+        capture_io(:stderr, fn ->
+          defmodule CreateWithoutUpsert do
+            use Ash.Resource,
+              domain: nil,
+              extensions: [AshStateMachine]
 
-          state_machine do
-            initial_states [:pending]
+            state_machine do
+              initial_states [:pending]
 
-            transitions do
-              transition :reset, from: :*, to: :pending
+              transitions do
+                transition :reset, from: :*, to: :pending
+              end
+            end
+
+            actions do
+              create :reset do
+                change transition_state("pending")
+              end
             end
           end
+        end)
 
-          actions do
-            create :reset do
-              change transition_state("pending")
-            end
-          end
-        end
-      end
+      assert result =~ ~r/non-upsert create action/
     end
 
     test "create action transitions without `from: :*` do not compile" do
-      assert_raise Spark.Error.DslError, ~r/must allow transitions from all states/, fn ->
-        defmodule CreateWithoutAllowingFromAll do
-          use Ash.Resource,
-            domain: nil,
-            extensions: [AshStateMachine]
+      result =
+        capture_io(:stderr, fn ->
+          defmodule CreateWithoutAllowingFromAll do
+            use Ash.Resource,
+              domain: nil,
+              extensions: [AshStateMachine]
 
-          state_machine do
-            initial_states [:pending, :howdy]
+            state_machine do
+              initial_states [:pending, :howdy]
 
-            transitions do
-              transition :reset, from: :howdy, to: :pending
+              transitions do
+                transition :reset, from: :howdy, to: :pending
+              end
+            end
+
+            actions do
+              create :reset do
+                upsert? true
+                change transition_state(:pending)
+              end
             end
           end
+        end)
 
-          actions do
-            create :reset do
-              upsert? true
-              change transition_state(:pending)
-            end
-          end
-        end
-      end
+      assert result =~ ~r/must allow transitions from all states/
     end
 
     test "any action other than update or create with upsert? true does not compile" do
-      assert_raise Spark.Error.DslError, ~r/no such create or update action/, fn ->
-        defmodule DeleteAction do
-          use Ash.Resource,
-            domain: nil,
-            extensions: [AshStateMachine]
+      result =
+        capture_io(:stderr, fn ->
+          defmodule DeleteAction do
+            use Ash.Resource,
+              domain: nil,
+              extensions: [AshStateMachine]
 
-          state_machine do
-            initial_states [:pending]
+            state_machine do
+              initial_states [:pending]
 
-            transitions do
-              transition :delete, from: :*, to: :pending
+              transitions do
+                transition :delete, from: :*, to: :pending
+              end
+            end
+
+            actions do
+              destroy :delete do
+                change transition_state(:pending)
+              end
             end
           end
+        end)
 
-          actions do
-            destroy :delete do
-              change transition_state(:pending)
-            end
-          end
-        end
-      end
+      assert result =~ ~r/no such create or update action/
     end
   end
 

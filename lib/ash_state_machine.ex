@@ -7,10 +7,11 @@ defmodule AshStateMachine do
             action: atom,
             from: [atom],
             to: [atom],
-            __identifier__: any
+            __identifier__: any,
+            __spark_metadata__: Spark.Dsl.Entity.spark_meta()
           }
 
-    defstruct [:action, :from, :to, :__identifier__]
+    defstruct [:action, :from, :to, :__identifier__, :__spark_metadata__]
   end
 
   require Logger
