@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Checks.ValidNextState do
   @moduledoc """
   A policy for pre_flight checking if a state transition is allowed.
