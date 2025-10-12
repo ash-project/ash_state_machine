@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.BuiltinChanges.TransitionState do
   @moduledoc false
   use Ash.Resource.Change

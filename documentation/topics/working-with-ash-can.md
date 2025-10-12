@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020 Zach Daniel
+
+SPDX-License-Identifier: MIT
+-->
+
 # Working with `Ash.can?`
 
 Using `Ash.can?/3` won't return `false` if a given state machine transition is invalid. This is because `Ash.can?/3` is only concerned with policies, not changes/validations. However, many folks use `Ash.can?/3` in their UI to determine whether a given button/form/etc should be shown. To help with this you can add the following to your resource:

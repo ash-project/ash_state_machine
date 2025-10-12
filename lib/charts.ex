@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Charts do
   @moduledoc """
   Returns a mermaid flow chart of a given state machine resource.

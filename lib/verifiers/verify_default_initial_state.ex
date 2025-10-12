@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Verifiers.VerifyDefaultInitialState do
   # Verifies the default initial state is in the list of initial states.
   @moduledoc false

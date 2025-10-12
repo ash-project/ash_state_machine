@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Errors.InvalidInitialState do
   @moduledoc "Used when an initial state is set that is not a valid initial state"
   use Ash.Error.Exception

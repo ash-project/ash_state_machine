@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Verifiers.VerifyTransitionActions do
   # Verifies that each transition corresponds to an update action
   @moduledoc false

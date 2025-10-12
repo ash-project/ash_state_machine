@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Zach Daniel
+#
+# SPDX-License-Identifier: MIT
+
 defmodule AshStateMachine.Transformers.SetDefaultInitialState do
   # If there is only one value in inital_states we can set it
   # as the default
