@@ -10,7 +10,7 @@ SPDX-License-Identifier: MIT
 
 If you haven't already, read the [Ash Getting Started Guide](https://hexdocs.pm/ash/get-started.html), and familiarize yourself with Ash and Ash resources.
 
-## Bring in the ash_state_machine dependency
+## Add ash_state_machine as a dependency in your mix.exs file
 
 ```elixir
 {:ash_state_machine, "~> 0.2.12"}
@@ -51,7 +51,10 @@ state_machine do
 end
 ```
 
-## Use `transition_state` in your actions
+## Add actions that correspond to your state transitions
+
+For each state transition, you will need to create a corresponding action to trigger it.
+Inside the action, use the `transition_state` function to make the transition
 
 ### For simple/static state transitions
 
@@ -65,6 +68,8 @@ end
 ```
 
 ### For dynamic/conditional state transitions
+
+You can define custom transitions with additional logic by using the Ash.Resource.Change protocol and implementing the change method:
 
 ```elixir
 defmodule Start do
