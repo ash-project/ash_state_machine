@@ -50,6 +50,17 @@ defmodule AshStateMachineTest do
       end
     end
 
+    test "NoMatchingTransition error can be converted to Ash error class" do
+      error =
+        AshStateMachine.Errors.NoMatchingTransition.exception(
+          old_state: :pending,
+          target: :invalid,
+          action: :some_action
+        )
+
+      assert %Ash.Error.Invalid{} = Ash.Error.to_error_class(error)
+    end
+
     test "create actions are allowed with `upsert? true`" do
       state_machine = Verification.create!() |> Verification.begin!()
       assert Verification.reset!(%{id: state_machine.id}).state == :pending
