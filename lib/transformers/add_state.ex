@@ -85,8 +85,12 @@ defmodule AshStateMachine.Transformers.AddState do
                 module: module,
                 path: [:attributes, attribute.name],
                 message: """
-                Expected the attribute #{attribute.name} to have the `one_of` constraints with the following values:
+                Expected the attribute #{attribute.name} to have the `one_of` constraint with the following values:
                 #{inspect(Enum.sort(all_states))}
+
+                Got
+
+                #{inspect(Enum.sort(constraints[:one_of] || []))}
                 """
             end
 
