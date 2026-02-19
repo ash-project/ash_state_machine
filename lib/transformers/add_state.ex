@@ -85,9 +85,12 @@ defmodule AshStateMachine.Transformers.AddState do
                 module: module,
                 path: [:attributes, attribute.name],
                 message: """
-                Unexpected value found for attribute #{attribute.name}: #{Enum.join(all_states -- constraints[:one_of], ", ")}.
-                #{attribute.name} has a `one_of` constraints with the following values:
+                Expected the attribute #{attribute.name} to have the `one_of` constraint with the following values:
                 #{inspect(Enum.sort(all_states))}
+
+                Got
+
+                #{inspect(Enum.sort(constraint[:one_of] || []))}
                 """
             end
 
