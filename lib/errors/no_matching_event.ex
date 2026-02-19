@@ -1,9 +1,11 @@
-# SPDX-FileCopyrightText: 2023 ash_state_machine contributors <https://github.com/ash-project/ash_state_machine/graphs.contributors>
+# SPDX-FileCopyrightText: 2023 ash_state_machine contributors <https://github.com/ash-project/ash_state_machine/graphs/contributors>
 #
 # SPDX-License-Identifier: MIT
 
 defmodule AshStateMachine.Errors.NoMatchingTransition do
   @moduledoc "Used when a state change occurs in an action with no matching transition"
+  use Ash.Error.Exception
+
   use Splode.Error,
     fields: [:action, :target, :old_state],
     class: :invalid

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 ash_state_machine contributors <https://github.com/ash-project/ash_state_machine/graphs.contributors>
+# SPDX-FileCopyrightText: 2023 ash_state_machine contributors <https://github.com/ash-project/ash_state_machine/graphs/contributors>
 #
 # SPDX-License-Identifier: MIT
 
@@ -48,6 +48,17 @@ defmodule AshStateMachineTest do
 
         assert Exception.message(reason) =~ ~r/no matching transition/i
       end
+    end
+
+    test "NoMatchingTransition error can be converted to Ash error class" do
+      error =
+        AshStateMachine.Errors.NoMatchingTransition.exception(
+          old_state: :pending,
+          target: :invalid,
+          action: :some_action
+        )
+
+      assert %Ash.Error.Invalid{} = Ash.Error.to_error_class(error)
     end
 
     test "create actions are allowed with `upsert? true`" do
