@@ -90,7 +90,7 @@ defmodule AshStateMachine.Transformers.AddState do
 
                 Got
 
-                #{inspect(Enum.sort(constraint[:one_of] || []))}
+                #{inspect(Enum.sort(constraints[:one_of] || []))}
                 """
             end
 
