@@ -4,10 +4,8 @@
 
 defmodule AshStateMachine.Errors.NoMatchingTransition do
   @moduledoc "Used when a state change occurs in an action with no matching transition"
-  use Ash.Error.Exception
-
   use Splode.Error,
-    fields: [:action, :target, :old_state],
+    fields: [:action, :target, :old_state, :field],
     class: :invalid
 
   def message(error) do

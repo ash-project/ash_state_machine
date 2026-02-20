@@ -4,10 +4,8 @@
 
 defmodule AshStateMachine.Errors.InvalidInitialState do
   @moduledoc "Used when an initial state is set that is not a valid initial state"
-  use Ash.Error.Exception
-
   use Splode.Error,
-    fields: [:action, :target],
+    fields: [:action, :target, :field],
     class: :invalid
 
   def message(error) do
