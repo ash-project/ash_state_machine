@@ -27,7 +27,7 @@ This tutorial, we will explore the following topics:
 Add the following dependency to your `mix.exs` file:
 
 ```elixir
-{:ash_state_machine, "~> 0.2.12"}
+{:ash_state_machine, "~> 0.2.13"}
 ```
 
 Next, update your project dependencies by executing `mix deps.get`

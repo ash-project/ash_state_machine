@@ -12,6 +12,19 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.13](https://github.com/ash-project/ash_state_machine/compare/v0.2.12...v0.2.13) (2026-04-13)
+
+
+
+
+### Bug Fixes:
+
+* key :field not found (#135) by Daniel Gollings
+
+### Improvements:
+
+* error message on attribute that violates one_of constraint (#139) by Travis Simon
+
 ## [v0.2.12](https://github.com/ash-project/ash_state_machine/compare/v0.2.11...v0.2.12) (2025-07-29)
 
 
