@@ -18,3 +18,12 @@ on_its_way --> error: error
 confirmed --> error: error
 pending --> error: error
 ```
+
+## Clarity integration
+
+If [`clarity`](https://hex.pm/packages/clarity) is a dependency of your
+project, every resource that uses `AshStateMachine` automatically gains
+a "State Machine" tab in the Clarity UI rendering the live Mermaid
+diagram. No configuration is required — the content provider is
+registered via the library's own application environment and
+discovered by Clarity on startup.
