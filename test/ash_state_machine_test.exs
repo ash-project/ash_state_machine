@@ -6,6 +6,7 @@ defmodule AshStateMachineTest do
   use ExUnit.Case
   doctest AshStateMachine
   import ExUnit.CaptureIO
+  require Ash.Query
 
   describe "transformers" do
     test "infers all states, excluding star (:*)" do
@@ -152,6 +153,53 @@ defmodule AshStateMachineTest do
         end)
 
       assert result =~ ~r/no such create or update action/
+    end
+  end
+
+  describe "atomic behavior" do
+    test "it transitions to the appropriate state" do
+      state_machine = Verification.create!()
+
+      assert %Ash.BulkResult{status: :success, records: [%{state: :executing}]} =
+               Verification
+               |> Ash.Query.filter(id == ^state_machine.id)
+               |> Ash.bulk_update(:begin, %{},
+                 strategy: :atomic,
+                 return_errors?: true,
+                 return_records?: true,
+                 authorize?: false
+               )
+    end
+
+    test "it rejects transitions from states with no matching transition" do
+      state_machine = Verification.create!() |> Verification.begin!()
+
+      assert %Ash.BulkResult{status: :error, errors: [error]} =
+               Verification
+               |> Ash.Query.filter(id == ^state_machine.id)
+               |> Ash.bulk_update(:begin, %{},
+                 strategy: :atomic,
+                 return_errors?: true,
+                 authorize?: false
+               )
+
+      assert Exception.message(error) =~ ~r/no matching transition/i
+    end
+
+    test "it rejects transitions for actions with no matching transitions" do
+      state_machine = Verification.create!()
+
+      assert %Ash.BulkResult{status: :error, errors: [error]} =
+               Verification
+               |> Ash.Query.filter(id == ^state_machine.id)
+               |> Ash.bulk_update(:no_transition_update, %{},
+                 strategy: :atomic,
+                 return_errors?: true,
+                 authorize?: false
+               )
+
+      assert Exception.message(error) =~ ~r/no matching transition/i
+      assert Ash.get!(Verification, state_machine.id).state == :pending
     end
   end
 

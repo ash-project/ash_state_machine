@@ -28,6 +28,10 @@ defmodule Verification do
       change transition_state(:executing)
     end
 
+    update :no_transition_update do
+      change transition_state(:executing)
+    end
+
     create :reset do
       upsert? true
       change transition_state(:pending)

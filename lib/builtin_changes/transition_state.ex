@@ -39,13 +39,13 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
        }}
     else
       states_expr =
-        Enum.reduce(transitions, nil, fn transition, expr ->
+        Enum.reduce(transitions, false, fn transition, expr ->
           state_expr =
             expr(
               ^old_state in ^List.wrap(transition.from) and ^target in ^List.wrap(transition.to)
             )
 
-          if is_nil(expr) do
+          if expr == false do
             state_expr
           else
             expr(^state_expr or ^expr)
