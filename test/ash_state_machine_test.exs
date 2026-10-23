@@ -203,6 +203,30 @@ defmodule AshStateMachineTest do
     end
   end
 
+  describe "non-atomic behavior" do
+    test "it checks the transition against a record re-read before the action runs" do
+      stale = Verification.create!()
+      Verification.begin!(stale)
+
+      assert {:error, error} =
+               stale
+               |> Ash.Changeset.for_update(:begin_refetched)
+               |> Ash.update()
+
+      assert Exception.message(error) =~ ~r/no matching transition/i
+      assert Ash.get!(Verification, stale.id).state == :executing
+    end
+
+    test "it transitions when the re-read record allows it" do
+      state_machine = Verification.create!()
+
+      assert {:ok, %{state: :executing}} =
+               state_machine
+               |> Ash.Changeset.for_update(:begin_refetched)
+               |> Ash.update()
+    end
+  end
+
   describe "charts" do
     test "it generates the appropriate chart" do
       assert AshStateMachine.Charts.mermaid_flowchart(ThreeStates) ==

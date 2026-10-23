@@ -15,6 +15,7 @@ defmodule Verification do
 
     transitions do
       transition(:begin, from: :pending, to: :executing)
+      transition(:begin_refetched, from: :pending, to: :executing)
       transition(:reset, from: :*, to: :pending)
       transition(:broken_upsert, from: :*, to: [:foo, :bar])
     end
@@ -25,6 +26,17 @@ defmodule Verification do
     defaults [:read, :create]
 
     update :begin do
+      change transition_state(:executing)
+    end
+
+    # ETS doesn't support locks, so this re-read stands in for `get_and_lock_for_update()`
+    update :begin_refetched do
+      require_atomic? false
+
+      change before_action(fn changeset, _ ->
+               %{changeset | data: Ash.get!(Verification, changeset.data.id)}
+             end)
+
       change transition_state(:executing)
     end
 

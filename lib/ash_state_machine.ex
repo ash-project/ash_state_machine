@@ -196,6 +196,24 @@ defmodule AshStateMachine do
   end
 
   @doc false
+  # `changeset.data` may be re-read before the action runs, e.g. by `get_and_lock_for_update/0`.
+  # If that changes the state, transition again from the record that is actually being updated.
+  def transition_and_recheck(changeset, transition) do
+    attribute = AshStateMachine.Info.state_machine_state_attribute!(changeset.resource)
+    old_state = Map.get(changeset.data, attribute)
+
+    changeset
+    |> transition.()
+    |> Ash.Changeset.before_action(fn changeset ->
+      if Map.get(changeset.data, attribute) == old_state do
+        changeset
+      else
+        transition.(changeset)
+      end
+    end)
+  end
+
+  @doc false
   def no_such_state(changeset, target, old_state \\ nil) do
     Logger.error("""
     Attempted to transition to an unknown state.

@@ -6,6 +6,13 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
   @moduledoc false
   use Ash.Resource.Change
 
+  def change(%{action_type: :update} = changeset, opts, _) do
+    AshStateMachine.transition_and_recheck(
+      changeset,
+      &AshStateMachine.transition_state(&1, opts[:target])
+    )
+  end
+
   def change(changeset, opts, _) do
     AshStateMachine.transition_state(changeset, opts[:target])
   end
