@@ -6,12 +6,12 @@ defmodule AshStateMachine.BuiltinChanges.NextState do
   @moduledoc false
   use Ash.Resource.Change
 
-  def change(%{action_type: :update} = changeset, _opts, _) do
-    AshStateMachine.transition_and_recheck(changeset, &next_state/1)
-  end
-
-  def change(changeset, _opts, _) do
-    next_state(changeset)
+  def change(changeset, opts, _) do
+    if opts[:recheck?] do
+      AshStateMachine.transition_and_recheck(changeset, &next_state/1)
+    else
+      next_state(changeset)
+    end
   end
 
   defp next_state(changeset) do

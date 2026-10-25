@@ -16,6 +16,9 @@ defmodule Verification do
     transitions do
       transition(:begin, from: :pending, to: :executing)
       transition(:begin_refetched, from: :pending, to: :executing)
+      transition(:begin_refetched_without_recheck, from: :pending, to: :executing)
+      transition(:next_refetched, from: :pending, to: :executing)
+      transition(:begin_always_atomic, from: :pending, to: :executing)
       transition(:reset, from: :*, to: :pending)
       transition(:broken_upsert, from: :*, to: [:foo, :bar])
     end
@@ -37,7 +40,35 @@ defmodule Verification do
                %{changeset | data: Ash.get!(Verification, changeset.data.id)}
              end)
 
+      change transition_state(:executing, recheck?: true)
+    end
+
+    update :begin_refetched_without_recheck do
+      require_atomic? false
+
+      change before_action(fn changeset, _ ->
+               %{changeset | data: Ash.get!(Verification, changeset.data.id)}
+             end)
+
       change transition_state(:executing)
+    end
+
+    update :next_refetched do
+      require_atomic? false
+
+      change before_action(fn changeset, _ ->
+               %{changeset | data: Ash.get!(Verification, changeset.data.id)}
+             end)
+
+      change next_state(recheck?: true)
+    end
+
+    update :begin_always_atomic do
+      require_atomic? false
+
+      # A function change can't be done atomically, so the action isn't atomic.
+      change fn changeset, _ -> changeset end
+      change transition_state(:executing), always_atomic?: true
     end
 
     update :no_transition_update do

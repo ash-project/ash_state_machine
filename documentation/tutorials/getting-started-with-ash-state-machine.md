@@ -198,6 +198,44 @@ Note: You must define transitions for your actions. If you call
 `change transition_state` and there isn't a matching `from` and
 `to` state, the action will fail.
 
+## Transitions and stale records
+
+In an atomic update, the transition is checked in the `UPDATE` statement,
+against the state that is stored. In a non-atomic update, for example one with
+`require_atomic? false` and a change that can't be done atomically, it's checked
+against the record the action was called with. If something else changed the
+state after that record was read, the transition is checked against the old
+state.
+
+To check it against the stored state in a non-atomic update, either:
+
+- Add `always_atomic?: true` to the change. The transition is then checked in
+  the `UPDATE`, even though the rest of the action isn't atomic. This needs a
+  data layer that supports atomic updates. Until the record is written, other
+  changes and hooks see the old state.
+
+  ```elixir
+  update :cancel do
+    require_atomic? false
+    change SomeNonAtomicChange
+    change transition_state(:cancelled), always_atomic?: true
+  end
+  ```
+
+- Pass `recheck?: true`, and read the record again before the action runs, for
+  example with `get_and_lock_for_update()`. If the state has changed, the
+  transition is checked again in a `before_action` hook. Declare the lock
+  before the transition. `next_state` accepts `recheck?: true` too, and it
+  can't be made atomic.
+
+  ```elixir
+  update :cancel do
+    require_atomic? false
+    change get_and_lock_for_update()
+    change transition_state(:cancelled, recheck?: true)
+  end
+  ```
+
 
 # Conditional state transitions
 

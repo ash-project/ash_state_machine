@@ -10,19 +10,31 @@ defmodule AshStateMachine.BuiltinChanges do
   @doc """
   Changes the state to the target state, validating the transition
 
-  In non-atomic update actions, the transition is checked again in a `before_action` hook.
-  Declare `get_and_lock_for_update()` before this change to check the transition against
-  the locked record rather than the one the action was called with.
+  In non-atomic actions, the transition is checked against the record the action was called
+  with, which may be out of date. See [Transitions and stale records](getting-started-with-ash-state-machine.md#transitions-and-stale-records)
+  for ways to check it against the stored record instead.
+
+  ## Options
+
+  * `:recheck?` - Check the transition again in a `before_action` hook if the record's state
+    has changed by then, for example because `get_and_lock_for_update()` read it again.
+    Declare the lock before this change. Defaults to `false`.
   """
-  def transition_state(target) do
-    {AshStateMachine.BuiltinChanges.TransitionState, target: target}
+  def transition_state(target, opts \\ []) do
+    {AshStateMachine.BuiltinChanges.TransitionState,
+     opts |> Keyword.validate!(recheck?: false) |> Keyword.put(:target, target)}
   end
 
   @doc """
   Try and transition to the next state. Must be only one possible next state.
 
-  The next state is picked again in a `before_action` hook. Declare
-  `get_and_lock_for_update()` before this change to pick it from the locked record.
+  ## Options
+
+  * `:recheck?` - Pick the next state again in a `before_action` hook if the record's state
+    has changed by then, for example because `get_and_lock_for_update()` read it again.
+    Declare the lock before this change. Defaults to `false`.
   """
-  def next_state, do: AshStateMachine.BuiltinChanges.NextState
+  def next_state(opts \\ []) do
+    {AshStateMachine.BuiltinChanges.NextState, Keyword.validate!(opts, recheck?: false)}
+  end
 end

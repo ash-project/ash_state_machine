@@ -204,7 +204,30 @@ defmodule AshStateMachineTest do
   end
 
   describe "non-atomic behavior" do
-    test "it checks the transition against a record re-read before the action runs" do
+    test "it checks the transition against the record the action was called with" do
+      stale = Verification.create!()
+      Verification.begin!(stale)
+
+      assert {:ok, %{state: :executing}} =
+               stale
+               |> Ash.Changeset.for_update(:begin_refetched_without_recheck)
+               |> Ash.update()
+    end
+
+    test "with `always_atomic?: true`, it checks the transition against the stored record" do
+      stale = Verification.create!()
+      Verification.begin!(stale)
+
+      assert {:error, error} =
+               stale
+               |> Ash.Changeset.for_update(:begin_always_atomic)
+               |> Ash.update()
+
+      assert Exception.message(error) =~ ~r/no matching transition/i
+      assert Ash.get!(Verification, stale.id).state == :executing
+    end
+
+    test "with `recheck?: true`, it checks the transition against a record re-read before the action runs" do
       stale = Verification.create!()
       Verification.begin!(stale)
 
@@ -217,13 +240,26 @@ defmodule AshStateMachineTest do
       assert Ash.get!(Verification, stale.id).state == :executing
     end
 
-    test "it transitions when the re-read record allows it" do
+    test "with `recheck?: true`, it transitions when the re-read record allows it" do
       state_machine = Verification.create!()
 
       assert {:ok, %{state: :executing}} =
                state_machine
                |> Ash.Changeset.for_update(:begin_refetched)
                |> Ash.update()
+    end
+
+    test "with `recheck?: true`, `next_state` picks the next state from a record re-read before the action runs" do
+      stale = Verification.create!()
+      Verification.begin!(stale)
+
+      assert {:error, error} =
+               stale
+               |> Ash.Changeset.for_update(:next_refetched)
+               |> Ash.update()
+
+      assert Exception.message(error) =~ ~r/no next state available/i
+      assert Ash.get!(Verification, stale.id).state == :executing
     end
   end
 

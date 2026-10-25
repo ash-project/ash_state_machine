@@ -6,15 +6,14 @@ defmodule AshStateMachine.BuiltinChanges.TransitionState do
   @moduledoc false
   use Ash.Resource.Change
 
-  def change(%{action_type: :update} = changeset, opts, _) do
-    AshStateMachine.transition_and_recheck(
-      changeset,
-      &AshStateMachine.transition_state(&1, opts[:target])
-    )
-  end
-
   def change(changeset, opts, _) do
-    AshStateMachine.transition_state(changeset, opts[:target])
+    transition = &AshStateMachine.transition_state(&1, opts[:target])
+
+    if opts[:recheck?] do
+      AshStateMachine.transition_and_recheck(changeset, transition)
+    else
+      transition.(changeset)
+    end
   end
 
   def atomic(changeset, opts, _) do
