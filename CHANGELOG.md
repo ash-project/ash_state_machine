@@ -12,6 +12,21 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.3.0](https://github.com/ash-project/ash_state_machine/compare/v0.2.13...v0.3.0) (2026-10-25)
+
+
+
+
+### Features:
+
+* clarity: add Clarity content provider for state diagrams (#146) by Josh Price
+
+### Bug Fixes:
+
+* re-check transitions if they've changed in data by Zach Daniel
+
+* ensure empty state transition lists are honored on atomic paths by Zach Daniel
+
 ## [v0.2.13](https://github.com/ash-project/ash_state_machine/compare/v0.2.12...v0.2.13) (2026-04-13)
 
 
