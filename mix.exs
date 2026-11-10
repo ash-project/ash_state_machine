@@ -133,12 +133,7 @@ defmodule AshStateMachine.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      env: [
-        clarity_content_providers: [
-          AshStateMachine.Clarity.StateMachineDiagram
-        ]
-      ]
+      extra_applications: [:logger]
     ]
   end
 
@@ -146,7 +141,6 @@ defmodule AshStateMachine.MixProject do
   defp deps do
     [
       {:ash, ash_version("~> 3.0 and >= 3.4.66")},
-      {:clarity, "~> 0.3", optional: true},
       {:igniter, "~> 0.5", only: [:dev, :test]},
       {:simple_sat, "~> 0.1", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.36", only: [:dev, :test]},
