@@ -12,6 +12,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.3.1](https://github.com/ash-project/ash_state_machine/compare/v0.3.0...v0.3.1) (2026-11-10)
+
+
+
+
+### Bug Fixes:
+
+* remove clarity dependency by Zach Daniel
+
 ## [v0.3.0](https://github.com/ash-project/ash_state_machine/compare/v0.2.13...v0.3.0) (2026-10-25)
 
 
